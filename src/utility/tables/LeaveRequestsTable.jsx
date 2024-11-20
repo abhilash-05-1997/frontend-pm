@@ -57,9 +57,9 @@ const LeaveRequestsTable = ({
                         onChange={(e) => setRecordsPerPage(parseInt(e.target.value))}
                         className="border border-gray-300 rounded px-2 py-1 text-sm"
                     >
+                        <option value={10}>10</option>
                         <option value={20}>20</option>
-                        <option value={40}>40</option>
-                        <option value={60}>60</option>
+                        <option value={30}>30</option>
                     </select>
                     <span className="text-sm text-gray-600">Records per page</span>
                 </div>
@@ -84,9 +84,9 @@ const LeaveRequestsTable = ({
                         {paginatedData.map((request, index) => (
                             <tr key={index} className="border-b hover:bg-gray-50">
                                 <td className="px-2 sm:px-4 py-2 text-center text-orange-500">
-                                    {request.status === 'Pending' && '⏳'}
-                                    {request.status === 'Approved' && '✔️'}
-                                    {request.status === 'Rejected' && '❌'}
+                                    {request.status_of_leave === 'Pending' && '⏳'}
+                                    {request.status_of_leave === 'Approved' && '✔️'}
+                                    {request.status_of_leave === 'Rejected' && '❌'}
                                 </td>
                                 <td className="px-2 sm:px-4 py-2">{request.employee.Name}</td>
                                 <td className="px-2 sm:px-4 py-2">{request.leave_day_type}</td>
@@ -97,18 +97,26 @@ const LeaveRequestsTable = ({
 
                                 {showActions && (
                                     <td className="px-2 sm:px-4 py-2 text-center">
-                                        <button
-                                            onClick={() => onStatusChange(request.id, 'approve')}
-                                            className="text-sm bg-green-500 text-white px-3 py-1 rounded mr-2"
-                                        >
-                                            Approve
-                                        </button>
-                                        <button
-                                            onClick={() => onStatusChange(request.id, 'reject')}
-                                            className="text-sm bg-red-500 text-white px-3 py-1 rounded"
-                                        >
-                                            Reject
-                                        </button>
+                                        {request.status_of_leave === 'Pending' ? (
+                                            <>
+                                                <button
+                                                    onClick={() => onStatusChange(request.id, 'approve')}
+                                                    className="text-sm bg-green-500 text-white px-3 py-1 rounded mr-2"
+                                                >
+                                                    Approve
+                                                </button>
+                                                <button
+                                                    onClick={() => onStatusChange(request.id, 'reject')}
+                                                    className="text-sm bg-red-500 text-white px-3 py-1 rounded"
+                                                >
+                                                    Reject
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <span className="text-gray-500 text-sm">
+                                                {request.status_of_leave} 
+                                            </span>
+                                        )}
                                     </td>
                                 )}
                             </tr>
