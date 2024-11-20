@@ -16,14 +16,14 @@ import Reportees from "./team/Reportees";
 // Reusable Tab Link
 const TabLink = ({ to, children }) => {
   const location = useLocation();
-  const isActive = location.pathname.startsWith(`/${to}`);
+  const isActive = location.pathname.includes(`/${to}`);
 
   return (
     <Link
       to={to}
-      className={`px-4 py-2 text-sm font-semibold ${
+      className={`px-4 py-2 text-lg font-semibold ${
         isActive
-          ? "text-blue-600 border-b-2 border-blue-600"
+          ? "text-blue-600 border-b-2 border-blue-600 bg-gray-200"
           : "text-gray-600 hover:text-blue-600"
       }`}
     >
@@ -37,7 +37,7 @@ const SubTabLinks = ({ basePath, tabs }) => {
   const location = useLocation();
 
   return (
-    <div className="flex flex-wrap gap-4 justify-start md:justify-center mb-6">
+    <div className="flex flex-wrap gap-3 justify-self-start md:justify-evenly mb-6">
       {tabs.map((tab) => (
         <Link
           key={tab.path}

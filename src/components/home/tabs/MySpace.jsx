@@ -28,7 +28,7 @@ function MySpace() {
         {OVERVIEW_TABS.slice(0, 3).map((label) => (
           <NavLink
             key={label}
-            to={`/home/myspace?tab=${label.toLowerCase().replace(' ', '-')}`} // Converts label to query parameter
+            to={`/myspace?tab=${label.toLowerCase().replace(' ', '-')}`} // Converts label to query parameter
             className={({ isActive }) =>
               isActive ? "text-blue-600 font-semibold" : "hover:text-blue-600"
             }

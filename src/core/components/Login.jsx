@@ -31,12 +31,12 @@ const Login = () => {
         toast.success('Login Successfull Redirecting...')
         
         setTimeout(() => {
-          navigate("/home/myspace");
+          navigate("/myspace");
         }, 3000);
         
       }
     } catch (error) {
-      toast.error('Invalid Credentials...')
+      toast.error('Something went wrong...')
       console.error(error);
       
     }
