@@ -1,56 +1,39 @@
 import React, { useEffect, useState } from "react";
 import LeaveRequestsTable from "../../../utility/tables/LeaveRequestsTable";
+import { toast } from "react-toastify";
+import apiService from "../../../api/apiService";
 
 const LeaveRequest = () => {
-  const generateDummyData = () => {
-    const leaveTypes = [
-      "Sick Leave",
-      "Personal Leave",
-      "Work From Home",
-      "Vacation",
-    ];
-    const statuses = ["Approved", "Rejected", "Pending", "Cancelled"];
-    const types = ["Paid", "Unpaid"];
-    const employees = [
-      "John Doe",
-      "Jane Smith",
-      "Michael Johnson",
-      "Emily Davis",
-      "Chris Lee",
-    ];
 
-    const getRandomDate = (start, end) => {
-      const date = new Date(
-        start.getTime() + Math.random() * (end.getTime() - start.getTime())
-      );
-      return `${date.getDate()}-${date.toLocaleString("en", {
-        month: "short",
-      })}-${date.getFullYear()}`;
-    };
+  const [LeaveRequest, setLeaveRequest] = useState([]);
 
-    return Array.from({ length: 100 }, (_, index) => ({
-      employee: `${employees[Math.floor(Math.random() * employees.length)]} (${
-        index + 1
-      })`,
-      leaveType: leaveTypes[Math.floor(Math.random() * leaveTypes.length)],
-      status: statuses[Math.floor(Math.random() * statuses.length)],
-      type: types[Math.floor(Math.random() * types.length)],
-      leaveDates: `${getRandomDate(
-        new Date(2024, 0, 1),
-        new Date(2024, 11, 31)
-      )} - ${getRandomDate(new Date(2024, 0, 1), new Date(2024, 11, 31))}`,
-      daysTaken: `${Math.floor(Math.random() * 10) + 1} Day(s)`,
-      requestDate: getRandomDate(new Date(2024, 0, 1), new Date(2024, 11, 31)),
-    }));
-  };
 
-  const [data, setData] = useState([]);
+  const GET_LEAVE_REQUESTS = 'api/leave-requests/'
+
+  
+  
   
   // Generate and set data on initial load
   useEffect(() => {
     //API call will be made to fetch data from server based on logged user
-    const data = generateDummyData();
-    setData(data);
+    const fetchLeaveRequests = async() => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        if(!token){
+          toast.error('Something went wrong...')
+          return;
+        }
+        const response = await apiService.fetchInstance(GET_LEAVE_REQUESTS);
+        console.log(response.data);
+        setLeaveRequest(response.data);
+        
+      } catch (error) {
+        console.error(error);
+        toast.error('Something went wrong')
+        
+      }
+    }
+    fetchLeaveRequests();
   }, []);
 
   // Filtered data based on the selected filter
@@ -60,7 +43,7 @@ const LeaveRequest = () => {
   
   return (
     <LeaveRequestsTable
-      data={data}
+      data={LeaveRequest}
       showActions={false}
       
     />

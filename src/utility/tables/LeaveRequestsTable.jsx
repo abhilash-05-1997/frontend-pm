@@ -84,9 +84,9 @@ const LeaveRequestsTable = ({
                         {paginatedData.map((request, index) => (
                             <tr key={index} className="border-b hover:bg-gray-50">
                                 <td className="px-2 sm:px-4 py-2 text-center text-orange-500">
-                                    {request.status_of_leave === 'Pending' && '⏳'}
-                                    {request.status_of_leave === 'Approved' && '✔️'}
-                                    {request.status_of_leave === 'Rejected' && '❌'}
+                                    {request.status === 'Pending' && '⏳'}
+                                    {request.status === 'Approved' && '✔️'}
+                                    {request.status === 'Rejected' && '❌'}
                                 </td>
                                 <td className="px-2 sm:px-4 py-2">{request.employee.Name}</td>
                                 <td className="px-2 sm:px-4 py-2">{request.leave_day_type}</td>
