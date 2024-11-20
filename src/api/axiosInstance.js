@@ -4,15 +4,19 @@ import { logMsgToConsole, logOutUser } from '../utility/constants';
 export default function axiosInstance(history = null) {
     const baseURL = `http://127.0.0.1:8000/`;
     // const baseURL = process.env.REACT_APP_API_ENDPOINT;
-    let headers = {};
+    // let headers = {};
     // Might change this to take value from local app state
-    if (localStorage.token) {
-        headers.Authorization = `Bearer ${localStorage.token}`;
+    // if (localStorage.accessToken) {
+    //     headers.Authorization = `Bearer ${localStorage.accessToken}`;
+    // }
+
+    const token = localStorage.getItem('accessToken');
+    const headers = {
+        'Authorization': `Bearer ${token}` 
     }
-    
     const axiosInstance = axios.create({
         baseURL: baseURL,
-        headers,
+        headers
     });
 
     axiosInstance.interceptors.response.use(

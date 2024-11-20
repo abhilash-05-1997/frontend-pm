@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import cronLabsLogo from "../../assets/cron-labs-logo.jpeg";
 import apiService from "../../api/apiService";
 import { jwtDecode } from 'jwt-decode';
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [username, setUserName] = useState("");
@@ -12,7 +14,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await apiService.createInstance("accounts/login/" , { username, password, });
+      const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/accounts/login/`, { username, password});
 
       console.log("Login response:", response.data);
 
@@ -20,12 +22,13 @@ const Login = () => {
 
       const decodedToken = jwtDecode(access_token);
       const userId = decodedToken.user_id; // Access the user_id from the token
-  
       console.log(userId);
       const role = response.data.role;
       if (access_token) {
         localStorage.setItem("accessToken", access_token);
         localStorage.setItem("Role", role);
+
+        toast.success('Login Successfull Redirecting...')
         
         setTimeout(() => {
           navigate("/home/myspace");
@@ -33,6 +36,7 @@ const Login = () => {
         
       }
     } catch (error) {
+      toast.error('Invalid Credentials...')
       console.error(error);
       
     }

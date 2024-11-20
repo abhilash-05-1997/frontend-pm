@@ -13,7 +13,7 @@ const LeaveRequestsTable = ({
     const filteredData =
         filter === 'All Requests'
             ? data
-            : data.filter((request) => request.status === filter);
+            : data.filter((request) => request.status_of_leave === filter);
 
     // Pagination logic
     const totalRecords = filteredData.length;
@@ -72,11 +72,11 @@ const LeaveRequestsTable = ({
                         <tr className="bg-gray-100 border-b">
                             <th className="px-2 sm:px-4 py-2">Status</th>
                             <th className="px-2 sm:px-4 py-2">Employee Name</th>
+                            <th className="px-2 sm:px-4 py-2">Leave Day Type</th>
                             <th className="px-2 sm:px-4 py-2">Leave Type</th>
-                            <th className="px-2 sm:px-4 py-2">Type</th>
-                            <th className="px-2 sm:px-4 py-2">Leave Dates</th>
-                            <th className="px-2 sm:px-4 py-2">Days/Hours Taken</th>
-                            <th className="px-2 sm:px-4 py-2">Date of Request</th>
+                            <th className="px-2 sm:px-4 py-2">Reason for Leave</th>
+                            <th className="px-2 sm:px-4 py-2">Start Date</th>
+                            <th className="px-2 sm:px-4 py-2">End Date</th>
                             {showActions && <th className="px-2 sm:px-4 py-2">Action</th>}
                         </tr>
                     </thead>
@@ -84,16 +84,17 @@ const LeaveRequestsTable = ({
                         {paginatedData.map((request, index) => (
                             <tr key={index} className="border-b hover:bg-gray-50">
                                 <td className="px-2 sm:px-4 py-2 text-center text-orange-500">
-                                    {request.status === 'Pending' && '⏳'}
-                                    {request.status === 'Approved' && '✔️'}
-                                    {request.status === 'Rejected' && '❌'}
+                                    {request.status_of_leave === 'Pending' && '⏳'}
+                                    {request.status_of_leave === 'Approved' && '✔'}
+                                    {request.status_of_leave === 'Rejected' && '❌'}
                                 </td>
-                                <td className="px-2 sm:px-4 py-2">{request.employee}</td>
-                                <td className="px-2 sm:px-4 py-2">{request.leaveType}</td>
-                                <td className="px-2 sm:px-4 py-2">{request.type}</td>
-                                <td className="px-2 sm:px-4 py-2">{request.leaveDates}</td>
-                                <td className="px-2 sm:px-4 py-2">{request.daysTaken}</td>
-                                <td className="px-2 sm:px-4 py-2">{request.requestDate}</td>
+                                <td className="px-2 sm:px-4 py-2">{request.employee.Name}</td>
+                                <td className="px-2 sm:px-4 py-2">{request.leave_day_type}</td>
+                                <td className="px-2 sm:px-4 py-2">{request.leave_type_name}</td>
+                                <td className="px-2 sm:px-4 py-2">{request.reason_for_leave}</td>
+                                <td className="px-2 sm:px-4 py-2">{request.start_date}</td>
+                                <td className="px-2 sm:px-4 py-2">{request.end_date}</td>
+
                                 {showActions && (
                                     <td className="px-2 sm:px-4 py-2 text-center">
                                         <button
