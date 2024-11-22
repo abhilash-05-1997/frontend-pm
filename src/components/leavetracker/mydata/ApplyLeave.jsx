@@ -8,8 +8,7 @@ const ApplyLeave = ({ isOpen, onClose }) => {
   const [leaveType, setLeaveType] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [leaveDayType, setLeaveDayType] = useState("Full day");
-  const [halfDay, setHalfDay] = useState("First half");
+  const [leaveDays, setLeaveDays] = useState([]);
   const [managerId, setManagerId] = useState(null);
   const [employeeId, setEmployeeId] = useState(null);
   const [reason, setReason] = useState("");
@@ -19,7 +18,7 @@ const ApplyLeave = ({ isOpen, onClose }) => {
   const GET_USER = "accounts/users/";
   const CREATE_LEAVE_REQUEST = "api/leave-requests/apply/";
 
-  const fetchLeaveTypes = async (setLeaveTypes, onClose) => {
+  const fetchLeaveTypes = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
       toast.error("Please login to apply leave");
@@ -34,7 +33,7 @@ const ApplyLeave = ({ isOpen, onClose }) => {
     }
   };
 
-  const fetchEmployeeData = async (setEmployeeId, setManagerId, onClose) => {
+  const fetchEmployeeData = async () => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
       toast.error("Please login to apply leave");
@@ -65,88 +64,97 @@ const ApplyLeave = ({ isOpen, onClose }) => {
   useEffect(() => {
     if (!isOpen) return;
 
-    fetchLeaveTypes(setLeaveTypes, onClose);
-    fetchEmployeeData(setEmployeeId, setManagerId, onClose);
-  }, [isOpen, onClose, setLeaveTypes, setEmployeeId, setManagerId]);
+    fetchLeaveTypes();
+    fetchEmployeeData();
+  }, [isOpen]);
 
-  //   const [formData, setFormData] = useState({
-  //     leaveType: "",
-  //     startDate: "",
-  //     endDate: "",
-  //     reason: "",
-  //     email: "", // Ensure email is included in the state
-  //   });
+  const handleDateChange = () => {
+    if (!startDate || !endDate) return;
 
-  //   const handleChange = (e) => {
-  //     const { name, value } = e.target;
-  //     setFormData((prev) => ({ ...prev, [name]: value }));
-  //   };
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const tempDays = [];
+
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const dayOfWeek = d.getDay(); // 0 = Sunday, 6 = Saturday
+      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+      tempDays.push({
+        date: d.toISOString().split("T")[0],
+        leave_day_type: isWeekend ? "Weekend" : "Full day",
+        half_day: null,
+        isWeekend,
+      });
+    }
+
+    setLeaveDays(tempDays);
+  };
+
+  useEffect(() => {
+    handleDateChange();
+  }, [startDate, endDate]);
+
+  const updateLeaveDayType = (index, type, half) => {
+    const updatedDays = [...leaveDays];
+    updatedDays[index] = {
+      ...updatedDays[index],
+      leave_day_type: type,
+      half_day: type === "Half day" ? half : null,
+    };
+    setLeaveDays(updatedDays);
+  };
 
   const payload = {
     employee: employeeId,
     leave_type: leaveType,
-    start_date: startDate,
-    end_date: endDate,
-    leave_day_type: leaveDayType,
-    half_day: leaveDayType === "Half day" ? halfDay : null,
+    leave_days: leaveDays,
     reporting_manager: managerId,
     reason_for_leave: reason,
     status: "Pending",
   };
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(payload);
-    
-
-    if(!managerId){
-        toast.error('Someting went wrong...')
-        return;
+    if (!managerId) {
+      toast.error("Something went wrong...");
+      return;
     }
 
-    if(new Date(startDate) > new Date(endDate)){
-        toast.error('End date must be after start date')
-        return;
+    if (new Date(startDate) > new Date(endDate)) {
+      toast.error("End date must be after start date");
+      return;
     }
+
     try {
-        const token = localStorage.getItem('accessToken');
-        if(!token){
-            toast.error('Please Login again');    
-            onClose();
-            return;
-        }
-        const response = await apiService.createInstance(CREATE_LEAVE_REQUEST, payload);
-        if (response.status === 201) {
-            toast.success('Leave request created successfully');
-        }
-        else{
-            toast.error('Failed to Submit Leave Request..')
-        }
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        toast.error("Please login again");
+        onClose();
+        return;
+      }
+      const response = await apiService.createInstance(
+        CREATE_LEAVE_REQUEST,
+        payload
+      );
+      if (response.status === 201) {
+        toast.success("Leave request created successfully");
+      } else {
+        toast.error("Failed to submit leave request");
+      }
     } catch (error) {
-        console.error('Error Submitting Leave Requests', error);
-        toast.error('Failed to Submit leave request')
-        
+      console.error("Error submitting leave request:", error);
+      toast.error("Failed to submit leave request");
     }
 
-    // Add submission logic here
-    onClose(); // Close modal after submission
+    onClose();
   };
 
   const handleCancel = () => {
-    // setFormData({
-    //   leaveType: "",
-    //   startDate: "",
-    //   endDate: "",
-    //   reason: "",
-    //   email: "",
-    // }); // Reset all fields
-    onClose(); // Close modal on cancel
+    onClose();
   };
 
-  if (!isOpen) return null; // Do not render if not open
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -202,50 +210,49 @@ const ApplyLeave = ({ isOpen, onClose }) => {
               onChange={(e) => setEndDate(e.target.value)}
               required
             />
-            {/* <InputField
-              label="Team Email ID"
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            /> */}
-        <div className="col-span-1 sm:col-span-2">
-            <label
-              htmlFor="leave Day Type"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Leave Day Type
-            </label>
-            <select
-              id="leaveDayType"
-              name="leaveDayType"
-              value={leaveDayType}
-              onChange={(e) => setLeaveDayType(e.target.value)}
-              className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              required
-            >
-              <option value="Full day">Full day</option>
-              <option value="Half day">Half day</option>
-            </select>
-        </div>
           </div>
 
-          {leaveDayType === "Half day" && (
-            <>
-              <label
-                htmlFor="leave Day Type"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Half day
-              </label>
-              <select value={halfDay} onChange={(e) => setHalfDay(e.target.value)}>
-                <option value="First half">Morning</option>
-                <option value="Second half">Afternoon</option>
-              </select>
-            </>
-          )}
+          {/* Dynamic Leave Days */}
+          <div>
+            <h3 className="text-lg font-medium">Leave Days</h3>
+            {leaveDays.map((day, index) => (
+              <div key={index} className="flex items-center space-x-4 mb-4">
+                <span>{day.date}</span>
+                {day.isWeekend ? (
+                  <span className="text-gray-500 italic">Weekend</span>
+                ) : (
+                  <>
+                    <select
+                      value={day.leave_day_type}
+                      onChange={(e) =>
+                        updateLeaveDayType(
+                          index,
+                          e.target.value,
+                          e.target.value === "Half day" ? "First half" : null
+                        )
+                      }
+                      className="p-2 border rounded"
+                    >
+                      <option value="Full day">Full day</option>
+                      <option value="Half day">Half day</option>
+                    </select>
+                    {day.leave_day_type === "Half day" && (
+                      <select
+                        value={day.half_day || "First half"}
+                        onChange={(e) =>
+                          updateLeaveDayType(index, "Half day", e.target.value)
+                        }
+                        className="p-2 border rounded"
+                      >
+                        <option value="First half">First half</option>
+                        <option value="Second half">Second half</option>
+                      </select>
+                    )}
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
 
           <InputField
             label="Reason for Leave"

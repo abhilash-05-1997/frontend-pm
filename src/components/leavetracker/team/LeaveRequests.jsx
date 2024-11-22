@@ -2,11 +2,8 @@ import React, { useEffect, useState } from "react";
 import LeaveRequestsTable from "../../../utility/tables/LeaveRequestsTable";
 import apiService from "../../../api/apiService";
 
-
 const LeaveRequests = () => {
-  const [filter, setFilter] = useState("all");
-  const [view, setView] = useState("grid");
-  const [reportees, setReportees] = useState([]);
+  const [reportees, setReportees] = useState([]); // Ensure empty array as initial state
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,7 +12,6 @@ const LeaveRequests = () => {
 
   const fetchReporteesLeaveRequests = async () => {
     try {
-      // Accessing a AccessToken Value from Local Storage
       const token = localStorage.getItem("accessToken");
       if (!token) {
         alert("You are not logged in.");
@@ -24,29 +20,36 @@ const LeaveRequests = () => {
 
       const response = await apiService.fetchInstance("api/reportees/leave-requests/");
       console.log("response ", response.data);
-      setReportees(response.data);
-      setLoading(false);
-    } 
-    catch (error) {
+
+      // Safely handle response data
+      
+        setReportees(response.data.results);
+        console.log("My message",reportees);
+     
+        // console.error("Expected an array but got:", response.data);
+        // setReportees([]);
+    } catch (error) {
       console.error("Error fetching leave requests:", error);
+      setReportees([]); // Gracefully handle errors
+    } finally {
       setLoading(false);
     }
   };
+
   const updateRequestStatus = async (leaveId, action) => {
-    const token = localStorage.getItem('accessToken'); // Retrieve token from localStorage
-
-    if (!token) {
-      alert('You are not authorized. Please log in again.');
-      return;
-    }
-
     try {
-      await apiService.createInstance(`api/leave-requests/${leaveId}/approve-reject/`,{ action }); // action can be 'approve' or 'reject'
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        alert("You are not authorized. Please log in again.");
+        return;
+      }
+
+      await apiService.createInstance(`api/leave-requests/${leaveId}/approve-reject/`, { action });
       alert(`Leave request ${action}d successfully!`);
-      
-      // Update the status of the reportee to remove the request from view
-      setReportees(prevReportees =>
-        prevReportees.map(reportee => 
+
+      // Update local state
+      setReportees((prevReportees) =>
+        prevReportees.map((reportee) =>
           reportee.id === leaveId ? { ...reportee, status_of_leave: action } : reportee
         )
       );
@@ -57,12 +60,17 @@ const LeaveRequests = () => {
   };
 
   return (
-
-    <LeaveRequestsTable
-      data={reportees}
-      showActions={true}
-      onStatusChange={updateRequestStatus}
-    />
+    <div>
+      {loading ? (
+        <p>Loading leave requests...</p>
+      ) : (
+        <LeaveRequestsTable
+          data={reportees}
+          showActions={true}
+          onStatusChange={updateRequestStatus}
+        />
+      )}
+    </div>
   );
 };
 
