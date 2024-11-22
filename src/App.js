@@ -6,6 +6,7 @@ import LeaveTracker from './components/leavetracker/LeaveTracker';
 import Login from './core/components/Login';
 import ForgotPassword from './core/components/ForgotPassword';
 import ResetPassword from './core/components/ResetPassword';
+import Home from './components/home/Home';
 
 const ComingSoon = () => {
   return (
@@ -29,7 +30,7 @@ function App() {
 
         {/* Sidebar Layout for Protected Routes */}
         <Route element={<Sidebar />}>
-          <Route path="myspace" element={<MySpace />} />
+          <Route path="home/*" element={<Home />} />
           <Route path="dashboard" element={<ComingSoon />} />
           <Route path="calendar" element={<ComingSoon />} />
           <Route path="settings" element={<ComingSoon />} />

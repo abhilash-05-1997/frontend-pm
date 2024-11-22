@@ -41,9 +41,7 @@ const LeaveSummary = () => {
   
 
   // for handling Apply Leave Modal
-  const handleApplyLeave = () => {
-    console.log('Button clicked...');
-    
+  const handleApplyLeave = () => {    
     setIsModalOpen(true)
   };
 

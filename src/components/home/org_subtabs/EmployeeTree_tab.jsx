@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Activities_tab = () => {
+const EmployeeTree_tab = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const Activities_tab = () => {
   )
 }
 
-export default Activities_tab
+export default EmployeeTree_tab

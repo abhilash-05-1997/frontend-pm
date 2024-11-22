@@ -14,7 +14,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}/accounts/login/`, { username, password});
+      const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}accounts/login/`, { username, password});
 
       console.log("Login response:", response.data);
 
@@ -31,8 +31,8 @@ const Login = () => {
         toast.success('Login Successfull Redirecting...')
         
         setTimeout(() => {
-          navigate("/myspace");
-        }, 3000);
+          navigate("/home/myspace?tab=activities");
+        }, 1000);
         
       }
     } catch (error) {

@@ -1,12 +1,12 @@
 import { NavLink, useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
-import Activities_tab from '../subtabs/Activities_tab';
-import Profile_tab from '../subtabs/Profile_tab';
-import Approvals_tab from '../subtabs/Approvals_tab';
-import Feeds_tab from '../subtabs/Feeds_tab';
-import Leave_tab from '../subtabs/Leave_tab';
-import Files_tab from '../subtabs/Files_tab';
-import RelatedData_tab from '../subtabs/RelatedData_tab';
+import Activities_tab from '../myspace_subtabs/Activities_tab';
+import Profile_tab from '../myspace_subtabs/Profile_tab';
+import Approvals_tab from '../myspace_subtabs/Approvals_tab';
+import Feeds_tab from '../myspace_subtabs/Feeds_tab';
+import Leave_tab from '../myspace_subtabs/Leave_tab';
+import Files_tab from '../myspace_subtabs/Files_tab';
+import RelatedData_tab from '../myspace_subtabs/RelatedData_tab';
 import clsx from 'clsx'
 
 function MySpace() {
@@ -28,7 +28,7 @@ function MySpace() {
         {OVERVIEW_TABS.slice(0, 3).map((label) => (
           <NavLink
             key={label}
-            to={`/myspace?tab=${label.toLowerCase().replace(' ', '-')}`} // Converts label to query parameter
+            to={`?tab=${label.toLowerCase().replace(' ', '-')}`} // Converts label to query parameter
             className={({ isActive }) =>
               isActive ? "text-blue-600 font-semibold" : "hover:text-blue-600"
             }
@@ -52,7 +52,7 @@ function MySpace() {
               {OVERVIEW_TABS.slice(3).map((label) => (
                 <NavLink
                   key={label}
-                  to={`/home/myspace?tab=${label.toLowerCase().replace(' ', '-')}`}
+                  to={`?tab=${label.toLowerCase().replace(' ', '-')}`}
                   className={({ isActive }) =>
                     isActive
                       ? "block px-4 py-2 text-blue-600 font-semibold"
@@ -130,14 +130,14 @@ function MySpace() {
   return (
     <>
     <div className="flex space-x-4 border-b-2 border-gray-200 mb-4">
-        {["My Space", "Organization"].map((label) => (
+        {/* {["My Space", "Organization"].map((label) => (
           <TabButton
             key={label}
             label={label}
             isActive={activeTab === label}
             onClick={() => setActiveTab(label)}
           />
-        ))}
+        ))} */}
       </div>
 
       {/* Secondary Navigation Tabs */}

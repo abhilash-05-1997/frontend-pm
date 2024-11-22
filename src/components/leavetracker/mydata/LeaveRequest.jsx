@@ -28,9 +28,8 @@ const LeaveRequest = () => {
         setLeaveRequest(response.data);
         
       } catch (error) {
-        console.error(error);
-        toast.error('Something went wrong')
-        
+        console.error("Error fetching leave requests", error);
+
       }
     }
     fetchLeaveRequests();

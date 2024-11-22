@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ToastContainer position="top-right" autoClose={3000} showProgressBar/>
+    <ToastContainer position="top-right" autoClose={1000} showProgressBar/>
       <App />
   </React.StrictMode>
 );
