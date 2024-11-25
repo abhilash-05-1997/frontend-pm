@@ -31,7 +31,7 @@ const Login = () => {
         toast.success('Login Successfull Redirecting...')
         
         setTimeout(() => {
-          navigate("/home/myspace?tab=activities");
+          navigate("/home/myspace/overview?tab=activities");
         }, 1000);
         
       }

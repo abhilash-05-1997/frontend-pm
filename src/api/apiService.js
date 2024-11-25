@@ -70,7 +70,7 @@ class APIService {
     }
     
     
-    deleteInstance(entityWithID, payload) {
+    deleteInstance(entityWithID) {
         // entityWithID = 'entity/entityID/';
         const url = entityWithID;
 
@@ -80,7 +80,7 @@ class APIService {
         // }
 
         // const encodedAuth = _getEncodedAuthKey();
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('accessToken');
 
         return axiosInstance().delete(url, {
                 headers: {
@@ -88,7 +88,6 @@ class APIService {
                     // "Authorization": `Basic ${encodedAuth}`
                     "Authorization": `Bearer ${token}`
                 },
-                data: payload,
         });
     }
 

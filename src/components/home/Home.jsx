@@ -34,7 +34,7 @@ const Home = () => {
 
         {/* Dynamic Routing 0for Content */}
         <Routes>
-          <Route path="/myspace" element={<MySpace />} />
+          <Route path="/myspace/*" element={<MySpace />} />
           <Route path="/organization" element={<Organization />} />
         </Routes>
       </div>
