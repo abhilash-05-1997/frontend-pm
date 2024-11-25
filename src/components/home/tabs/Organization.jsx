@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { FaBullhorn, FaClipboardList, FaUsers, FaTree, FaAddressBook, FaBirthdayCake, FaClipboardCheck, FaUser } from "react-icons/fa"; // Importing icons
+import { FaBullhorn, FaClipboardList, FaUsers, FaTree, FaAddressBook, FaBirthdayCake, FaClipboardCheck, FaUser, FaCalendar } from "react-icons/fa"; // Importing icons
 import Announcements_Tab from "../org_subtabs/Announcements_Tab";
 import Policies_tab from "../org_subtabs/Policies_tab";
 import EmployeeTree_tab from "../org_subtabs/EmployeeTree_tab";
@@ -9,6 +9,7 @@ import DepartmentDirectory_tab from "../org_subtabs/DepartmentDirectory_tab";
 import Birthdays_tab from "../org_subtabs/Birthdays_tab";
 import NewHire_tab from "../org_subtabs/NewHire_tab";
 import LeavePolicies_tab from "../org_subtabs/LeavePolicies_tab";
+import Holidays_tab from "../org_subtabs/Holidays_tab";
 
 const Organization = () => {
   const { search } = useLocation();
@@ -24,8 +25,9 @@ const Organization = () => {
     { name: "Department Tree", query: "department-tree", icon: <FaTree /> },
     { name: "Department Directory", query: "department-directory", icon: <FaAddressBook /> },
     { name: "Birthday Folks", query: "birthday-folks", icon: <FaBirthdayCake /> },
-    { name: "New Hires", query: "new-hires", icon: <FaUser Plus /> },
-    { name: "Leave Policies", query: "leave-policies", icon: <FaClipboardCheck /> }
+    { name: "New Hires", query: "new-hires", icon: <FaUser /> },
+    { name: "Leave Policies", query: "leave-policies", icon: <FaClipboardCheck /> },
+    { name: "Holidays", query: "holidays", icon: <FaCalendar /> }
   ];
 
   const renderTabContent = () => {
@@ -46,6 +48,8 @@ const Organization = () => {
         return <NewHire_tab />;
       case "leave-policies":
         return <LeavePolicies_tab />;
+      case "holidays":
+        return <Holidays_tab/>
       default:
         return <Announcements_Tab />;
     }

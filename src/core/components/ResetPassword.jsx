@@ -1,25 +1,40 @@
+import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const handleSubmit = (e) => {
+  const RESET_PASSWORD = 'accounts/reset-password/'
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (password === confirmPassword) {
-      // You would add API logic here to reset the password
-      setMessage("Your password has been successfully reset.");
-      
-      // Redirect to the login page after resetting the password
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
-    } else {
+    if (password !== confirmPassword) {
       setMessage("Passwords do not match.");
+      return;
+    }
+
+    const uid = searchParams.get("uid");
+    const token = searchParams.get("token");
+
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_ENDPOINT}${RESET_PASSWORD}`, {
+        uid,
+        token,
+        password,
+      });
+      setMessage(response.data.message);
+      toast.success("Password Reset Successfully..");
+      setTimeout(()=>{
+        navigate('/login')
+      }, 1000)
+    } catch (error) {
+      setMessage(error.response?.data?.error || "Something went wrong.");
     }
   };
 

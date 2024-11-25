@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom";
-import cronLabsLogo from '../../../../src/assets/cron-labs-logo.jpeg'
+import cronLabsLogo from "../../../../src/assets/cron-labs-logo.jpeg";
 
 const PROFILE_DROPDOWN = ["Dashboard", "Settings", "Sign out"];
 const SIDEBAR_LINKS = ["Home", "LeaveTracker", "Settings"];
@@ -48,10 +48,7 @@ const ProfileDropdown = ({ isDropdownOpen, toggleDropdown, dropdownRef }) => (
   </div>
 );
 
-
-
-const   SidebarLinks = () => {
-  
+const SidebarLinks = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -61,19 +58,25 @@ const   SidebarLinks = () => {
     navigate("/login");
   };
 
-  return(
+  return (
     <ul className="space-y-2 font-medium">
-    {SIDEBAR_LINKS.map((item, index) => (
-      <li key={index}>
-        <NavLink
-          to={item === "Home" ? "home/myspace?tab=activities" : `/${item.toLowerCase()}/`} 
-          className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-        >
-          <span className="ml-3">{item}</span>
-        </NavLink>
-      </li>
-    ))}
-    <li>
+      {SIDEBAR_LINKS.map((item, index) => (
+        <li key={index}>
+          <NavLink
+            to={
+              item === "Home"
+                ? "home/myspace/overview?tab=activities"
+                : item === "LeaveTracker"
+                ? "leavetracker/mydata/leave-summary"
+                : `/${item.toLowerCase()}/`
+            }
+            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            <span className="ml-3">{item}</span>
+          </NavLink>
+        </li>
+      ))}
+      <li>
         <button
           onClick={handleLogout}
           className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -81,10 +84,9 @@ const   SidebarLinks = () => {
           <span className="ml-3">Logout</span>
         </button>
       </li>
-  </ul>
-  )
+    </ul>
+  );
 };
-
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -97,7 +99,6 @@ const Sidebar = () => {
     []
   );
 
-  
   const closeSidebar = useCallback(() => setIsSidebarOpen(false), []);
   const toggleDropdown = useCallback((e) => {
     e.stopPropagation();

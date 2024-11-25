@@ -12,6 +12,7 @@
   import LeaveRequests from "./team/LeaveRequests";
   import OnLeave from "./team/OnLeave";
   import Reportees from "./team/Reportees";
+import Holidays from "./holidays/Holidays";
 
   // Reusable Tab Link
   const TabLink = ({ to, children }) => {
@@ -117,7 +118,7 @@
           </Route>
 
           {/* Holidays Route */}
-          <Route path="holidays" element={<div>Holidays Content</div>} />
+          <Route path="holidays" element={<div><Holidays/></div>} />
         </Routes>
       </div>
     </div>

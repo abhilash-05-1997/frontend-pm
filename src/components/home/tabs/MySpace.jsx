@@ -1,171 +1,150 @@
-import { NavLink, useSearchParams } from 'react-router-dom';
-import { useState } from 'react';
-import Activities_tab from '../myspace_subtabs/Activities_tab';
-import Profile_tab from '../myspace_subtabs/Profile_tab';
-import Approvals_tab from '../myspace_subtabs/Approvals_tab';
-import Feeds_tab from '../myspace_subtabs/Feeds_tab';
-import Leave_tab from '../myspace_subtabs/Leave_tab';
-import Files_tab from '../myspace_subtabs/Files_tab';
-import RelatedData_tab from '../myspace_subtabs/RelatedData_tab';
-import clsx from 'clsx'
+import React, { useEffect, useState } from "react";
+import {
+  Routes,
+  Route,
+  NavLink,
+  useSearchParams,
+  useLocation,
+} from "react-router-dom";
+import Activities_tab from "../myspace_subtabs/Activities_tab";
+import Profile_tab from "../myspace_subtabs/Profile_tab";
+import Approvals_tab from "../myspace_subtabs/Approvals_tab";
+import Feeds_tab from "../myspace_subtabs/Feeds_tab";
+import Leave_tab from "../myspace_subtabs/Leave_tab";
+import Files_tab from "../myspace_subtabs/Files_tab";
+import RelatedData_tab from "../myspace_subtabs/RelatedData_tab";
+import Dashboard from "./Dashboard";
+import clsx from "clsx";
+import apiService from "../../../api/apiService";
+import { jwtDecode } from "jwt-decode";
+import space_image from '../../../assets/space_image.jpg'
 
-function MySpace() {
+const Overview = () => {
   const [searchParams] = useSearchParams();
-  const tab = searchParams.get('tab');
-  const [activeSecondaryTab, setActiveSecondaryTab] = useState("Overview");
-  const [activeTab, setActiveTab] = useState("My Space");
+  const tab = searchParams.get("tab") || "activities"; // Default to "Activities"
 
+  const OVERVIEW_TABS = [
+    { label: "Activities", key: "activities", component: <Activities_tab /> },
+    { label: "Profile", key: "profile", component: <Profile_tab /> },
+    { label: "Approvals", key: "approvals", component: <Approvals_tab /> },
+    { label: "Feeds", key: "feeds", component: <Feeds_tab /> },
+    { label: "Leave", key: "leave", component: <Leave_tab /> },
+    { label: "Files", key: "files", component: <Files_tab /> },
+    { label: "Related Data", key: "related-data", component: <RelatedData_tab /> },
+  ];
 
-
-  function TabNavigation() {
-    const [showDropdown, setShowDropdown] = useState(false);
-    const OVERVIEW_TABS = ['Activities', 'Profile', 'Approvals', 'Feeds', 'Leave', 'Files', 'Related Data'];
-
-  
-    return (
-      <div className="flex items-center justify-center space-x-4 mb-4 text-gray-600 relative">
-        {/* Display the first three main icons */}
-        {OVERVIEW_TABS.slice(0, 3).map((label) => (
-          <NavLink
-            key={label}
-            to={`?tab=${label.toLowerCase().replace(' ', '-')}`} // Converts label to query parameter
-            className={({ isActive }) =>
-              isActive ? "text-blue-600 font-semibold" : "hover:text-blue-600"
-            }
-          >
-            {label}
-          </NavLink>
-        ))}
-  
-        {/* Three dots for the dropdown */}
-        <div className="relative">
-          <button
-            onClick={() => setShowDropdown(!showDropdown)}
-            className="focus:outline-none text-gray-600 hover:text-blue-600"
-          >
-            &#x2026; {/* Unicode for three dots (ellipsis) */}
-          </button>
-          
-          {/* Dropdown for remaining tabs */}
-          {showDropdown && (
-            <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg">
-              {OVERVIEW_TABS.slice(3).map((label) => (
-                <NavLink
-                  key={label}
-                  to={`?tab=${label.toLowerCase().replace(' ', '-')}`}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "block px-4 py-2 text-blue-600 font-semibold"
-                      : "block px-4 py-2 hover:bg-gray-100 hover:text-blue-600"
-                  }
-                  onClick={() => setShowDropdown(false)} // Close dropdown on click
-                >
-                  {label}
-                </NavLink>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-  
-
-  const renderTabContent = () => {
-    switch (tab) {
-      case 'activities':
-        return < Activities_tab/>;
-      case 'profile':
-        return <Profile_tab/>;
-      case 'approvals':
-        return <Approvals_tab />;
-      case 'feeds':
-        return <Feeds_tab/>;
-      case 'leave':
-        return <Leave_tab />;
-      case 'files':
-        return <Files_tab />;
-      case 'related-data':
-        return <RelatedData_tab />;
-      default:
-        return <Activities_tab />; // Default to Activities if tab is undefined
-    }
-  };
-
-  const TabButton = ({ label, isActive, onClick }) => (
-    <button
-      onClick={onClick}
-      className={clsx(
-        "px-4 py-2 font-semibold",
-        isActive
-          ? "text-black-300 border-b-2 border-blue-600 bg-gray-200"
-          : "text-gray-500 hover:text-blue-600"
-      )}
-    >
-      {label}
-    </button>
-  );
-  
-  // Reusable Card component
-  const Card = ({ title, content, className }) => (
-    <div className={clsx("bg-white shadow-md rounded-lg p-4", className)}>
-      <h2 className="font-semibold text-lg text-gray-700">{title}</h2>
-      <p className="text-gray-500 mt-2">{content}</p>
-    </div>
-  );
-  
-  // Reusable Header component for background image and profile text
-  const Header = ({ backgroundImage, title }) => (
-    <div
-      className="relative bg-cover bg-center h-36 rounded-lg mb-6"
-      style={{ backgroundImage: `url(${backgroundImage})` }}
-    >
-      <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 rounded-lg">
-        <h1 className="text-white text-2xl font-bold">{title}</h1>
-      </div>
-    </div>
-  );
-  
+  const currentTab = OVERVIEW_TABS.find((t) => t.key === tab) || OVERVIEW_TABS[0];
 
   return (
-    <>
-    <div className="flex space-x-4 border-b-2 border-gray-200 mb-4">
-        {/* {["My Space", "Organization"].map((label) => (
-          <TabButton
-            key={label}
-            label={label}
-            isActive={activeTab === label}
-            onClick={() => setActiveTab(label)}
-          />
-        ))} */}
-      </div>
-
-      {/* Secondary Navigation Tabs */}
-      <div className="flex space-x-4 mb-4 border-b-2 border-gray-200 mt-8">
-        {["Overview", "Dashboard"].map((label) => (
-          <TabButton
-            key={label}
-            label={label}
-            isActive={activeSecondaryTab === label}
-            onClick={() => setActiveSecondaryTab(label)}
-          />
+    <div>
+      {/* Navigation for subtabs */}
+      <div className="flex flex-wrap justify-center space-x-4 mb-4 text-gray-600">
+        {OVERVIEW_TABS.map((t) => (
+          <NavLink
+            key={t.key}
+            to={`/home/myspace/overview?tab=${t.key}`}
+            className={clsx(
+              "text-lg font-semibold px-4 py-2",
+              tab === t.key
+                ? "text-black border-b-2 border-blue-500"
+                : "hover:text-blue-600"
+            )}
+          >
+            {t.label}
+          </NavLink>
         ))}
       </div>
 
-      {/* Header with background image and profile text */}
-      <Header
-        backgroundImage="https://example.com/your-image.jpg"
-        title="Abhilash"
-      />
+      {/* Render the active tab's content */}
+      <div className="tab-content">{currentTab.component}</div>
+    </div>
+  );
+};
 
-    <div>
-      <TabNavigation />
-      <div className="tab-content">
-        {renderTabContent()}
+const Header = ({ backgroundImage, title }) => (
+  <div
+    className="relative bg-cover bg-center h-36 sm:h-24 md:h-36 lg:h-32 xl:h-60 rounded-lg mb-6"
+    style={{ backgroundImage: `url(${backgroundImage})` }}
+  >
+    <div className="absolute inset-0 flex justify-center items-center bg-black bg-opacity-30 rounded-lg">
+      <h1 className="text-white text-lg sm:text-2xl md:text-3xl font-bold">Welcome Back, {title}!!</h1>
+    </div>
+  </div>
+);
+
+const MySpace = () => {
+  const location = useLocation();
+  const GET_USER = 'accounts/users/'
+  const [user, setUser] = useState({})
+
+  useEffect(() => {
+    const fetchUserDetail = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if(!token){
+          console.error("No token Provied");
+          return;
+        }
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.user_id;
+        const response = await apiService.fetchInstance(`${GET_USER}${userId}/`);
+        console.log("response", response);
+        setUser(response.data)
+      } catch (error) { 
+        console.error("Failed to fetch user details", error);
+      }
+    }
+    fetchUserDetail();
+  }, [])
+
+  return (
+    <div className="bg-gray-100 min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        {/* Main Tabs: Overview and Dashboard */}
+        <div className="flex flex-wrap space-x-4 mb-4 border-b-2 border-gray-200">
+          <NavLink
+            to="/home/myspace/overview"
+            className={({ isActive }) =>
+              clsx(
+                "px-4 py-2 font-semibold",
+                isActive
+                  ? "text-blue-600 border-b-2 border-blue-600 bg-gray-200"
+                  : "text-gray-500 hover:text-blue-600"
+              )
+            }
+          >
+            Overview
+          </NavLink>
+          <NavLink
+            to="/home/myspace/dashboard"
+            className={({ isActive }) =>
+              clsx(
+                "px-4 py-2 font-semibold",
+                isActive
+                  ? "text-blue-600 border-b-2 border-blue-600 bg-gray-200"
+                  : "text-gray-500 hover:text-blue-600"
+              )
+            }
+          >
+            Dashboard
+          </NavLink>
+        </div>
+
+        {location.pathname === "/home/myspace/overview" && (
+          <Header
+            backgroundImage={space_image}
+            title={`${user.first_name} ${user.last_name}`}
+          />
+        )}
+
+        {/* Routes */}
+        <Routes>
+          <Route path="/overview/" element={<Overview />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Routes>
       </div>
     </div>
-  </>
   );
-}
+};
 
 export default MySpace;
