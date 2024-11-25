@@ -43,8 +43,8 @@ const OnLeave = () => {
             <h3 className="text-lg sm:text-xl font-semibold mb-3 text-gray-800">
               {reportee.reportee_first_name} {reportee.reportee_last_name} - <span className="text-lg text-red-600">On Leave</span>
             </h3>
-            <ul className="list-disc ml-4 text-gray-600">
-              {/* Check if 'leave_types' exists before mapping */}
+            {/* <ul className="list-disc ml-4 text-gray-600">
+              Check if 'leave_types' exists before mapping
               {reportee.leave_types && reportee.leave_types.length > 0 ? (
                 reportee.leave_types.map((leave, leaveIndex) => (
                   <li key={leaveIndex} className="mb-2">
@@ -52,9 +52,9 @@ const OnLeave = () => {
                   </li>
                 ))
               ) : (
-                <li>No leave data available</li>
+                <p></p>
               )}
-            </ul>
+            </ul> */}
           </div>
         ))
       ) : (

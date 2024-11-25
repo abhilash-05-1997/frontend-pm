@@ -19,27 +19,16 @@ const ApplyLeave = ({ isOpen, onClose }) => {
   const CREATE_LEAVE_REQUEST = "api/leave-requests/apply/";
 
   const fetchLeaveTypes = async () => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      toast.error("Please login to apply leave");
-      return;
-    }
-
     try {
       const response = await apiService.fetchAllInstances(GET_LEAVE_TYPES);
       setLeaveTypes(response.data);
     } catch (error) {
       console.error("Error fetching leave types:", error);
+      toast.error("Failed to fetch leave types.");
     }
   };
 
   const fetchEmployeeData = async () => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      toast.error("Please login to apply leave");
-      return;
-    }
-
     try {
       const response = await apiService.fetchInstance(GET_EMPLOYEE);
       const { id, user } = response.data;
@@ -53,19 +42,20 @@ const ApplyLeave = ({ isOpen, onClose }) => {
       if (reporting_manager) {
         setManagerId(reporting_manager);
       } else {
-        toast.error("You are not assigned to any manager...");
+        toast.error("You are not assigned to any manager.");
         onClose();
       }
     } catch (error) {
       console.error("Error fetching employee data:", error);
+      toast.error("Failed to fetch employee data.");
     }
   };
 
   useEffect(() => {
-    if (!isOpen) return;
-
-    fetchLeaveTypes();
-    fetchEmployeeData();
+    if (isOpen) {
+      fetchLeaveTypes();
+      fetchEmployeeData();
+    }
   }, [isOpen]);
 
   const handleDateChange = () => {
@@ -95,56 +85,61 @@ const ApplyLeave = ({ isOpen, onClose }) => {
   }, [startDate, endDate]);
 
   const updateLeaveDayType = (index, type, half) => {
-    const updatedDays = [...leaveDays];
-    updatedDays[index] = {
-      ...updatedDays[index],
-      leave_day_type: type,
-      half_day: type === "Half day" ? half : null,
-    };
-    setLeaveDays(updatedDays);
-  };
+    const leaveDayType =
+      type === "Half day" && half ? `Half day (${half})` : type;
 
-  const payload = {
-    employee: employeeId,
-    leave_type: leaveType,
-    leave_days: leaveDays,
-    reporting_manager: managerId,
-    reason_for_leave: reason,
-    status: "Pending",
+    setLeaveDays((prevLeaveDays) =>
+      prevLeaveDays.map((day, i) =>
+        i === index ? { ...day, leave_day_type: leaveDayType } : day
+      )
+    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!managerId) {
-      toast.error("Something went wrong...");
+    if (!leaveType || !reason || leaveDays.length === 0) {
+      toast.error("Please complete all fields before submitting.");
       return;
     }
 
     if (new Date(startDate) > new Date(endDate)) {
-      toast.error("End date must be after start date");
+      toast.error("End date must be after start date.");
       return;
     }
 
+    const validDays = leaveDays.filter(
+      (day) => !day.isWeekend && day.leave_day_type !== "Weekend"
+    );
+
+    if (validDays.length === 0) {
+      toast.error("Leave days cannot only be weekends.");
+      return;
+    }
+
+    const payload = {
+      employee: employeeId,
+      leave_type: leaveType,
+      leave_days: leaveDays,
+      reporting_manager: managerId,
+      reason_for_leave: reason,
+      status: "Pending",
+    };
+    console.log(payload);
+
     try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        toast.error("Please login again");
-        onClose();
-        return;
-      }
       const response = await apiService.createInstance(
         CREATE_LEAVE_REQUEST,
         payload
       );
       if (response.status === 201) {
-        toast.success("Leave request created successfully");
+        toast.success("Leave request created successfully.");
       } else {
-        toast.error("Failed to submit leave request");
+        toast.error("Failed to submit leave request.");
       }
     } catch (error) {
       console.error("Error submitting leave request:", error);
-      toast.error("Failed to submit leave request");
+      toast.error("Failed to submit leave request.");
     }
 
     onClose();
@@ -164,7 +159,6 @@ const ApplyLeave = ({ isOpen, onClose }) => {
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {/* Leave Type Dropdown */}
             <div className="col-span-1 sm:col-span-2">
               <label
                 htmlFor="leaveType"
@@ -191,7 +185,6 @@ const ApplyLeave = ({ isOpen, onClose }) => {
               </select>
             </div>
 
-            {/* Input Fields */}
             <InputField
               label="Start Date"
               type="date"
@@ -212,7 +205,6 @@ const ApplyLeave = ({ isOpen, onClose }) => {
             />
           </div>
 
-          {/* Dynamic Leave Days */}
           <div>
             <h3 className="text-lg font-medium">Leave Days</h3>
             {leaveDays.map((day, index) => (
@@ -228,26 +220,30 @@ const ApplyLeave = ({ isOpen, onClose }) => {
                         updateLeaveDayType(
                           index,
                           e.target.value,
-                          e.target.value === "Half day" ? "First half" : null
+                          day.isWeekend ? null : "1st half"
                         )
                       }
-                      className="p-2 border rounded"
                     >
                       <option value="Full day">Full day</option>
-                      <option value="Half day">Half day</option>
+                      <option value="Half day (1st half)">
+                        Half day (1st half)
+                      </option>
+                      <option value="Half day (2nd half)">
+                        Half day (2nd half)
+                      </option>
                     </select>
-                    {day.leave_day_type === "Half day" && (
+                    {/* {day.leave_day_type.includes("Half day") && (
                       <select
-                        value={day.half_day || "First half"}
+                        value={day.half_day || "1st half"}
                         onChange={(e) =>
                           updateLeaveDayType(index, "Half day", e.target.value)
                         }
                         className="p-2 border rounded"
                       >
-                        <option value="First half">First half</option>
-                        <option value="Second half">Second half</option>
+                        <option value="1st half">1st half</option>
+                        <option value="2nd half">2nd half</option>
                       </select>
-                    )}
+                    )} */}
                   </>
                 )}
               </div>
@@ -255,6 +251,7 @@ const ApplyLeave = ({ isOpen, onClose }) => {
           </div>
 
           <InputField
+
             label="Reason for Leave"
             type="textarea"
             id="reason"
@@ -266,18 +263,17 @@ const ApplyLeave = ({ isOpen, onClose }) => {
             required
           />
 
-          {/* Buttons */}
           <div className="flex justify-between items-center space-x-4">
             <button
               type="submit"
-              className="w-full sm:w-auto px-6 py-3 text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300"
+              className="w-full sm:w-auto px-6 py-3 text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition"
             >
               Submit
             </button>
             <button
               type="button"
               onClick={handleCancel}
-              className="w-full sm:w-auto px-6 py-3 text-blue-600 bg-white border border-blue-600 rounded-lg shadow hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300"
+              className="w-full sm:w-auto px-6 py-3 text-gray-600 bg-gray-200 rounded-lg shadow hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition"
             >
               Cancel
             </button>
