@@ -19,12 +19,12 @@ const Organization = () => {
 
   // All Tabs
   const allTabs = [
-    { name: "Announcements", query: "announcements", icon: <FaBullhorn /> },
-    { name: "Policies", query: "policies", icon: <FaClipboardList /> },
-    { name: "Employee Tree", query: "employee-tree", icon: <FaUsers /> },
-    { name: "Department Tree", query: "department-tree", icon: <FaTree /> },
-    { name: "Department Directory", query: "department-directory", icon: <FaAddressBook /> },
-    { name: "Birthday Folks", query: "birthday-folks", icon: <FaBirthdayCake /> },
+    // { name: "Announcements", query: "announcements", icon: <FaBullhorn /> },
+    // { name: "Policies", query: "policies", icon: <FaClipboardList /> },
+    // { name: "Employee Tree", query: "employee-tree", icon: <FaUsers /> },
+    // { name: "Department Tree", query: "department-tree", icon: <FaTree /> },
+    // { name: "Department Directory", query: "department-directory", icon: <FaAddressBook /> },
+    // { name: "Birthday Folks", query: "birthday-folks", icon: <FaBirthdayCake /> },
     { name: "New Hires", query: "new-hires", icon: <FaUser /> },
     { name: "Leave Policies", query: "leave-policies", icon: <FaClipboardCheck /> },
     { name: "Holidays", query: "holidays", icon: <FaCalendar /> }
@@ -32,18 +32,18 @@ const Organization = () => {
 
   const renderTabContent = () => {
     switch (currentTab) {
-      case "announcements":
-        return <Announcements_Tab />;
-      case "policies":
-        return <Policies_tab />;
-      case "employee-tree":
-        return <EmployeeTree_tab />;
-      case "department-tree":
-        return <DepartmentTree_tab />;
-      case "department-directory":
-        return <DepartmentDirectory_tab />;
-      case "birthday-folks":
-        return <Birthdays_tab />;
+      // case "announcements":
+      //   return <Announcements_Tab />;
+      // case "policies":
+      //   return <Policies_tab />;
+      // case "employee-tree":
+      //   return <EmployeeTree_tab />;
+      // case "department-tree":
+      //   return <DepartmentTree_tab />;
+      // case "department-directory":
+      //   return <DepartmentDirectory_tab />;
+      // case "birthday-folks":
+      //   return <Birthdays_tab />;
       case "new-hires":
         return <NewHire_tab />;
       case "leave-policies":
@@ -51,7 +51,7 @@ const Organization = () => {
       case "holidays":
         return <Holidays_tab/>
       default:
-        return <Announcements_Tab />;
+        return <NewHire_tab/>;
     }
   };
 
@@ -60,7 +60,7 @@ const Organization = () => {
   };
 
   return (
-    <div className="mt-6 px-4 md:px-8 bg-gray-50 rounded-lg shadow-md">
+    <div className="mt-6 px-4 md:px-8 bg-gray-50 rounded-lg shadow-md max-w-[1600px]">
       {/* Tabs for all screen sizes */}
       <div className="flex flex-wrap gap-4 border-b pb-4">
         {allTabs.map(({ name, query, icon }) => (

@@ -6,7 +6,7 @@ import apiService from "../../api/apiService";
 
 const Home = () => {
   // Main tabs (MySpace and Organization)
-  const [company, setCompany] = useState([]);
+  const [company, setCompany] = useState({});
 
   const GET_COMPANY = 'api/employees/me/';
   useEffect(() => {
@@ -33,24 +33,24 @@ const Home = () => {
 
 
   const mainTabs = [
-    { name: "My Space", path: "/myspace" },
-    { name: "Organization", path: "/organization?tab=announcements" },
+    { name: "My Space", path: "myspace/overview/?tab=profile" },
+    { name: "Organization", path: "/home/organization?tab=new-hires" },
   ];
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 py-6">
+    <div className="bg-gray-100 min-h-screen w-full">
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
         {/* Main Tabs */}
-        <div className="flex space-x-4 border-b pb-4 gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 gap-2 sm:gap-4 border-b pb-4">
           {mainTabs.map((tab, index) => (
             <NavLink
               key={index}
-              to={`${tab.name}`.toLowerCase().replace(" ", "")}
+              to={`${tab.path}`.toLowerCase().replace(" ", "")}
               className={({ isActive }) =>
-                `text-lg font-semibold pb-2 px-4 py-2 ${
+                `text-base sm:text-lg font-semibold pb-2 px-3 sm:px-4 py-1 sm:py-2 rounded-md ${
                   isActive
                     ? "text-blue-500 border-b-2 border-blue-500 bg-gray-200"
-                    : "text-gray-500 hover:text-blue-500"
+                    : "text-gray-500 hover:text-blue-500 hover:bg-gray-100"
                 }`
               }
             >
@@ -59,7 +59,7 @@ const Home = () => {
           ))}
         </div>
 
-        {/* Dynamic Routing 0for Content */}
+        {/* Dynamic Routing for Content */}
         <Routes>
           <Route path="/myspace/*" element={<MySpace />} />
           <Route path="/organization" element={<Organization />} />
