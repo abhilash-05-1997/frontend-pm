@@ -1,6 +1,33 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import apiService from "../../../api/apiService";
 const Dashboard = () => {
+  const [leaveBalance, setLeaveBalance] = useState([]);
+  const GET_EMPLOYEE_LEAVE_BALANCE = 'api/employee/leave-balance/'
+
+  useEffect(() => {
+    const fetchLeaveBalance = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          return;
+        }
+        const response = await apiService.fetchInstance(
+          GET_EMPLOYEE_LEAVE_BALANCE
+        );
+        console.log(response.data);
+        setLeaveBalance(response.data);
+      } catch (error) {
+        toast.error("Something went wrong..");
+      }
+    };
+
+    fetchLeaveBalance();
+  },
+  
+  []);
+
+
   const cards = [
     { title: "Birthday", content: "No birthdays today" },
     { title: "New Hires", content: "No New Joinees in past 15 days." },

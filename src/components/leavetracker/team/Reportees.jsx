@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import apiService from "../../../api/apiService";
+import { FaRegCalendarCheck, FaRegUser } from 'react-icons/fa';
 
 const Reportees = () => {
   const [reporteesData, setReporteesData] = useState({});
@@ -64,46 +65,64 @@ const Reportees = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-lg p-6 sm:p-8 lg:p-10">
-      <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-blue-600">
-        Reportees
+    <div className="max-w-6xl mx-auto bg-white shadow-2xl rounded-lg p-8 sm:p-10 lg:p-12 mt-8">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-black-300">
+        Reportees Leave Information
       </h2>
-      <div className="grid grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
         {Object.keys(reporteesData).map((reportee, index) => (
           <div
             key={index}
-            className="bg-white border border-gray-200 p-4 sm:p-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-1 hover:shadow-2xl"
+            className="bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-100 border border-gray-200 p-6 rounded-lg shadow-xl transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl"
           >
-            <h3 className="text-lg sm:text-xl font-semibold mb-3 text-gray-800">
-              {reportee} -   
-              <span
-                className={`text-lg ${
+            <div className="flex items-center mb-4">
+              <FaRegUser className="text-3xl text-indigo-600 mr-3" />
+              <h3 className="text-xl font-semibold text-gray-800">
+                {reportee}
+                <span
+                  className={`ml-2 text-sm font-semibold ${
+                    reporteesData[reportee].on_leave_today
+                      ? "text-red-600"
+                      : "text-green-600"
+                  }`}
+                >
+                  {reporteesData[reportee].on_leave_today
+                    ? "On Leave"
+                    : "Available"}
+                </span>
+              </h3>
+            </div>
+            <div className="space-y-4">
+              <ul className="list-none space-y-2 text-gray-700">
+                {(reporteesData[reportee].leave_details || []).map(
+                  (leave, leaveIndex) => (
+                    <li
+                      key={leaveIndex}
+                      className="flex justify-between items-center p-3 border rounded-lg bg-white shadow-sm hover:bg-indigo-50 transition-colors"
+                    >
+                      <span className="font-bold">{leave.leave_type}:</span>
+                      <div className="flex flex-col items-end">
+                        <span className="text-sm text-gray-600">Total Taken</span>
+                        <span className="font-semibold text-gray-800">{leave.total_taken}</span>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="text-sm text-gray-600">Remaining Balance</span>
+                        <span className="font-semibold text-gray-800">{leave.remaining_balance}</span>
+                      </div>
+                    </li>
+                  )
+                )}
+              </ul>
+            </div>
+            <div className="mt-4">
+              <FaRegCalendarCheck
+                className={`text-2xl ${
                   reporteesData[reportee].on_leave_today
                     ? "text-red-600"
                     : "text-green-600"
                 }`}
-              >
-                {reporteesData[reportee].on_leave_today
-                  ? "On Leave"
-                  : "Available"}
-              </span>
-            </h3>
-
-            <ul className="list-disc ml-4 text-gray-600">
-              {(reporteesData[reportee].leave_details || []).map(
-                (leave, leaveIndex) => (
-                  <li key={leaveIndex} className="mb-2">
-                    <span className="font-bold">{leave.leave_type}:</span> Total
-                    Taken -{" "}
-                    <span className="font-semibold">{leave.total_taken}</span>,
-                    Remaining -{" "}
-                    <span className="font-semibold">
-                      {leave.remaining_balance}
-                    </span>
-                  </li>
-                )
-              )}
-            </ul>
+              />
+            </div>
           </div>
         ))}
       </div>

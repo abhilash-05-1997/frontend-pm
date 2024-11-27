@@ -4,14 +4,7 @@ import apiService from "../../../api/apiService";
 
 const LeaveBalance = () => {
   const [leaveBalance, setLeaveBalance] = useState([]);
-  const GET_EMPLOYEE_LEAVE_BALANCE = 'api/employee/leave-balance/'
-
-  // const leaves = [
-  //   { type: "Leave Without Pay", available: 0, booked: 0, icon: "🌞" },
-  //   { type: "Personal Leave", available: 2.5, booked: 9.5, icon: "🌴" },
-  //   { type: "Sick Leave", available: 2, booked: 1, icon: "🤒" },
-  //   { type: "Work From Home", available: 11, booked: 10, icon: "🏠" },
-  // ];
+  const GET_EMPLOYEE_LEAVE_BALANCE = 'api/employee/leave-balance/';
 
   useEffect(() => {
     const fetchLeaveBalance = async () => {
@@ -20,10 +13,7 @@ const LeaveBalance = () => {
         if (!token) {
           return;
         }
-        const response = await apiService.fetchInstance(
-          GET_EMPLOYEE_LEAVE_BALANCE
-        );
-        console.log(response.data);
+        const response = await apiService.fetchInstance(GET_EMPLOYEE_LEAVE_BALANCE);
         setLeaveBalance(response.data);
       } catch (error) {
         toast.error("Something went wrong..");
@@ -31,21 +21,19 @@ const LeaveBalance = () => {
     };
 
     fetchLeaveBalance();
-  },
-  
-  []);
+  }, []);
 
   return (
-    <div className="grid grid-rows-1 sm:grid-rows-1 lg:grid-rows-1 gap-4 mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       {leaveBalance.map((leave, index) => (
         <div
           key={leave.leave_type}
-          className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 transition-transform transform hover:scale-105"
+          className="bg-white p-6 rounded-lg shadow-lg border border-gray-200 transition-transform transform hover:scale-105 hover:shadow-2xl"
         >
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-3xl">{leave.icon}</span>
+          <div className="flex items-center justify-between mb-6">
+            <span className="text-4xl">{leave.icon}</span>
             <div
-              className={`rounded-full px-3 py-1 text-xs font-bold ${
+              className={`rounded-full px-4 py-2 text-xs font-semibold ${
                 leave.total_taken
                   ? "bg-red-100 text-red-600"
                   : "bg-green-100 text-green-600"
@@ -54,10 +42,8 @@ const LeaveBalance = () => {
               {leave.total_taken ? "Booked" : "Available"}
             </div>
           </div>
-          <h2 className="text-lg font-semibold text-gray-700 mb-2">
-            {leave.leave_type}
-          </h2>
-          <div className="flex justify-between text-gray-500">
+          <h2 className="text-xl font-semibold text-gray-700 mb-3">{leave.leave_type}</h2>
+          <div className="flex justify-between text-gray-600 text-sm">
             <p>
               Available:{" "}
               <span className="font-semibold text-green-600">
@@ -66,7 +52,9 @@ const LeaveBalance = () => {
             </p>
             <p>
               Booked:{" "}
-              <span className="font-semibold text-red-600">{leave.total_taken}</span>
+              <span className="font-semibold text-red-600">
+                {leave.total_taken}
+              </span>
             </p>
           </div>
         </div>

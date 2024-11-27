@@ -12,11 +12,25 @@ const ApplyLeave = ({ isOpen, onClose }) => {
   const [managerId, setManagerId] = useState(null);
   const [employeeId, setEmployeeId] = useState(null);
   const [reason, setReason] = useState("");
+  const [holidays, setHolidays] = useState([]);
 
   const GET_LEAVE_TYPES = "api/leave-types/";
   const GET_EMPLOYEE = "api/employees/me/";
   const GET_USER = "accounts/users/";
   const CREATE_LEAVE_REQUEST = "api/leave-requests/apply/";
+  const GET_HOLIDAYS = "api/holidays/";
+
+  // Fetch Holidays data
+  const fetchHolidays = async () => {
+    try {
+      const response = await apiService.fetchAllInstances(GET_HOLIDAYS);
+      console.log(response.data); // Check the data returned by the API
+      setHolidays(response.data);
+    } catch (error) {
+      console.error("Error fetching holidays:", error);
+      toast.error("Failed to fetch holidays.");
+    }
+  };
 
   const fetchLeaveTypes = async () => {
     try {
@@ -34,9 +48,7 @@ const ApplyLeave = ({ isOpen, onClose }) => {
       const { id, user } = response.data;
       setEmployeeId(id);
 
-      const managerResponse = await apiService.fetchInstance(
-        `${GET_USER}${user}/`
-      );
+      const managerResponse = await apiService.fetchInstance(`${GET_USER}${user}/`);
       const { reporting_manager } = managerResponse.data;
 
       if (reporting_manager) {
@@ -55,6 +67,7 @@ const ApplyLeave = ({ isOpen, onClose }) => {
     if (isOpen) {
       fetchLeaveTypes();
       fetchEmployeeData();
+      fetchHolidays();
     }
   }, [isOpen]);
 
@@ -65,15 +78,20 @@ const ApplyLeave = ({ isOpen, onClose }) => {
     const end = new Date(endDate);
     const tempDays = [];
 
+    // Fetch holidays dates as a Set for quick lookup
+    const holidayDates = new Set(holidays.map((holiday) => holiday.holiday_date));
+
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
       const dayOfWeek = d.getDay(); // 0 = Sunday, 6 = Saturday
       const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+      const isHoliday = holidayDates.has(d.toISOString().split("T")[0]);
 
       tempDays.push({
         date: d.toISOString().split("T")[0],
-        leave_day_type: isWeekend ? "Weekend" : "Full day",
+        leave_day_type: isWeekend ? "Weekend" : isHoliday ? "Holiday" : "Full day",
         half_day: null,
         isWeekend,
+        isHoliday,
       });
     }
 
@@ -109,11 +127,11 @@ const ApplyLeave = ({ isOpen, onClose }) => {
     }
 
     const validDays = leaveDays.filter(
-      (day) => !day.isWeekend && day.leave_day_type !== "Weekend"
+      (day) => !day.isWeekend && !day.isHoliday && day.leave_day_type !== "Weekend"
     );
 
     if (validDays.length === 0) {
-      toast.error("Leave days cannot only be weekends.");
+      toast.error("Leave days cannot only be weekends or holidays.");
       return;
     }
 
@@ -128,10 +146,7 @@ const ApplyLeave = ({ isOpen, onClose }) => {
     console.log(payload);
 
     try {
-      const response = await apiService.createInstance(
-        CREATE_LEAVE_REQUEST,
-        payload
-      );
+      const response = await apiService.createInstance(CREATE_LEAVE_REQUEST, payload);
       if (response.status === 201) {
         toast.success("Leave request created successfully.");
       } else {
@@ -152,8 +167,8 @@ const ApplyLeave = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-full max-w-md sm:max-w-lg lg:max-w-3xl p-6 bg-white rounded-lg shadow-lg">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
+      <div className="w-full max-w-md sm:max-w-lg lg:max-w-3xl p-6 bg-white rounded-lg shadow-lg overflow-y-auto max-h-[90vh]">
         <h2 className="text-3xl lg:text-4xl font-bold text-blue-700 text-center mb-8">
           Apply Leave
         </h2>
@@ -212,6 +227,8 @@ const ApplyLeave = ({ isOpen, onClose }) => {
                 <span>{day.date}</span>
                 {day.isWeekend ? (
                   <span className="text-gray-500 italic">Weekend</span>
+                ) : day.isHoliday ? (
+                  <span className="text-gray-500 italic">Holiday</span>
                 ) : (
                   <>
                     <select
@@ -220,30 +237,15 @@ const ApplyLeave = ({ isOpen, onClose }) => {
                         updateLeaveDayType(
                           index,
                           e.target.value,
-                          day.isWeekend ? null : "1st half"
+                          day.isWeekend || day.isHoliday ? null : "1st half"
                         )
                       }
+                      className="p-2 border rounded"
                     >
                       <option value="Full day">Full day</option>
-                      <option value="Half day (1st half)">
-                        Half day (1st half)
-                      </option>
-                      <option value="Half day (2nd half)">
-                        Half day (2nd half)
-                      </option>
+                      <option value="Half day (1st half)">Half day (1st half)</option>
+                      <option value="Half day (2nd half)">Half day (2nd half)</option>
                     </select>
-                    {/* {day.leave_day_type.includes("Half day") && (
-                      <select
-                        value={day.half_day || "1st half"}
-                        onChange={(e) =>
-                          updateLeaveDayType(index, "Half day", e.target.value)
-                        }
-                        className="p-2 border rounded"
-                      >
-                        <option value="1st half">1st half</option>
-                        <option value="2nd half">2nd half</option>
-                      </select>
-                    )} */}
                   </>
                 )}
               </div>
@@ -251,7 +253,6 @@ const ApplyLeave = ({ isOpen, onClose }) => {
           </div>
 
           <InputField
-
             label="Reason for Leave"
             type="textarea"
             id="reason"

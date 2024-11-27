@@ -1,10 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, NavLink } from "react-router-dom";
 import MySpace from "./tabs/MySpace";
 import Organization from "./tabs/Organization";
+import apiService from "../../api/apiService";
 
 const Home = () => {
   // Main tabs (MySpace and Organization)
+  const [company, setCompany] = useState([]);
+
+  const GET_COMPANY = 'api/employees/me/';
+  useEffect(() => {
+    const fetchCompany = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          console.error("No token found");
+          return;
+        }
+        const response = await apiService.fetchInstance(GET_COMPANY);
+        console.log("reponse", response.data);
+        
+        setCompany(response.data);
+        localStorage.setItem("company_id", response.data.company);
+        localStorage.setItem("emp_id", response.data.id);
+        
+      } catch (error) {
+        console.error("Failed to fetch company", error);
+      }
+    };
+    fetchCompany();
+  }, []);
+
+
   const mainTabs = [
     { name: "My Space", path: "/myspace" },
     { name: "Organization", path: "/organization?tab=announcements" },
