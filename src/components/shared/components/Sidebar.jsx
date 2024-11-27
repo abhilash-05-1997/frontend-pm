@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom";
 import cronLabsLogo from "../../../../src/assets/cron-labs-logo.jpeg";
 
-const PROFILE_DROPDOWN = ["Dashboard", "Settings", "Sign out"];
-const SIDEBAR_LINKS = ["Home", "LeaveTracker", "Settings"];
+const PROFILE_DROPDOWN = ["Dashboard", "Sign out"];
+const SIDEBAR_LINKS = ["Home", "LeaveTracker" ];
 
 const ProfileDropdown = ({ isDropdownOpen, toggleDropdown, dropdownRef }) => (
   <div className="flex items-center ms-3 relative">
@@ -173,7 +173,7 @@ const Sidebar = () => {
 
       {/* Main content */}
       <div
-        className={`flex-1 pt-16 sm:pl-64 transition-all duration-300 ${
+        className={`flex-1 pt-16 sm:pl-64 transition-all duration-300 w-full ${
           isSidebarOpen ? "opacity-50 sm:opacity-100" : ""
         }`}
         onClick={isSidebarOpen ? closeSidebar : null}

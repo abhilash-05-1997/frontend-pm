@@ -91,5 +91,20 @@ class APIService {
         });
     }
 
+    deleteInstanceData(entityID, payload){
+        const url = entityID
+
+        const token = localStorage.getItem('accessToken');
+
+        return axiosInstance().delete(url, {
+                headers: {
+                    "Content-Type": "application/json",
+                    // "Authorization": `Basic ${encodedAuth}`
+                    "Authorization": `Bearer ${token}`
+                },
+                payload
+        });
+    }
+
 }
 export default new APIService();

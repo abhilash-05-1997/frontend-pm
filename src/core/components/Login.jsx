@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import cronLabsLogo from "../../assets/cron-labs-logo.jpeg";
 import apiService from "../../api/apiService";
@@ -10,6 +10,7 @@ const Login = () => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +28,7 @@ const Login = () => {
       if (access_token) {
         localStorage.setItem("accessToken", access_token);
         localStorage.setItem("Role", role);
+        
 
         toast.success('Login Successfull Redirecting...')
         
