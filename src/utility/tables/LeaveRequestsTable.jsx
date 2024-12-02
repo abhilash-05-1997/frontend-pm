@@ -32,43 +32,43 @@ const LeaveRequestsTable = ({ data, showActions = false, onStatusChange }) => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 dark:bg-dark-info-cards">
       {/* Filter and Pagination Controls */}
       <div className="flex flex-wrap items-center justify-between mb-4 space-y-2 sm:space-y-0">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 dark:text-dark-text dark:bg-dark-info-cards">
           <select
             value={filter}
             onChange={handleFilterChange}
-            className="border border-gray-300 rounded px-2 py-1 text-sm"
+            className="border border-gray-500 rounded px-2 py-1 text-sm dark:bg-dark-info-cards dark:text-dark-text"
           >
             <option value="All Requests">All Requests</option>
             <option value="Approved">Approved</option>
             <option value="Rejected">Rejected</option>
             <option value="Pending">Pending</option>
           </select>
-          <span className="text-sm text-gray-600">
-            Total Records: <strong>{totalRecords}</strong>
+          <span className="text-sm text-gray-600 dark:bg-dark-info-cards dark:text-dark-text p-0">
+            Total Records: <strong className="dark:bg-dark-info-cards">{totalRecords}</strong>
           </span>
         </div>
         <div className="flex items-center space-x-2">
           <select
             value={recordsPerPage}
             onChange={(e) => setRecordsPerPage(parseInt(e.target.value))}
-            className="border border-gray-300 rounded px-2 py-1 text-sm"
+            className="border border-gray-500 rounded px-2 py-1 text-sm dark:bg-dark-info-cards dark:text-dark-text"
           >
             <option value={10}>10</option>
             <option value={20}>20</option>
             <option value={30}>30</option>
           </select>
-          <span className="text-sm text-gray-600">Records per page</span>
+          <span className="text-sm text-gray-600 dark:text-dark-text">Records per page</span>
         </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto bg-white shadow rounded-lg">
-        <table className="min-w-full text-sm text-gray-600">
+      <div className="overflow-x-auto bg-white shadow rounded-lg dark:bg-dark-info-cards">
+        <table className="min-w-full text-sm text-gray-600 dark:bg-dark-info-cards">
           <thead>
-            <tr className="bg-gray-100 border-b">
+            <tr className="bg-gray-100 border-b dark:bg-dark-info-cards dark:text-dark-text text-center">
               <th className="px-2 sm:px-4 py-2">Status</th>
               <th className="px-2 sm:px-4 py-2">Employee Name</th>
               <th className="px-2 sm:px-4 py-2">Leave Type</th>
@@ -79,7 +79,7 @@ const LeaveRequestsTable = ({ data, showActions = false, onStatusChange }) => {
           </thead>
           <tbody>
             {paginatedData.map((request, index) => (
-              <tr key={index} className="border-b hover:bg-gray-50">
+              <tr key={index} className="border-b hover:bg-gray-50 dark:text-dark-text dark:hover:bg-dark-info-cards text-center">
                 <td className="px-2 sm:px-4 py-2 text-center">
                   {request.status_of_leave === "Pending" && "⏳"}
                   {request.status_of_leave === "Approved" && "✔️"}
@@ -120,7 +120,7 @@ const LeaveRequestsTable = ({ data, showActions = false, onStatusChange }) => {
                         </button>
                       </>
                     ) : (
-                      <span className="text-gray-500 text-sm">
+                      <span className="text-gray-500 text-sm dark:text-dark-text">
                         {request.status_of_leave}
                       </span>
                     )}

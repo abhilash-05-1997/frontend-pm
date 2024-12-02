@@ -25,21 +25,21 @@ const Holidays = () => {
   }, []);
 
   return (
-    <div className="p-4 sm:p-6 bg-gray-50 min-h-screen">
-      <h2 className="text-2xl font-semibold mb-6 text-gray-800">Holidays</h2>
+    <div className="p-4 sm:p-6 bg-gray-50 min-h-screen dark:bg-dark-bg">
+      <h2 className="text-2xl font-semibold mb-6 text-gray-800 dark:text-dark-text">Holidays</h2>
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
-        <table className="min-w-full table-auto">
-          <thead className="bg-blue-600 text-white">
-            <tr>
+        <table className="min-w-full table-auto dark:bg-dark-info-cards">
+          <thead className="dark:text-white text-black">
+            <tr cla>
               <th className="px-6 py-3 text-left text-sm font-semibold">Holiday Name</th>
               <th className="px-6 py-3 text-left text-sm font-semibold">Holiday Date</th>
             </tr>
           </thead>
           <tbody>
             {holidays.map((holiday) => (
-              <tr key={holiday.id} className="hover:bg-gray-100 transition-colors">
-                <td className="px-6 py-4 border-t text-sm text-gray-700">{holiday.holiday_name}</td>
-                <td className="px-6 py-4 border-t text-sm text-gray-700">
+              <tr key={holiday.id} className="hover:bg-gray-100 transition-colors dark:text-dark-text dark:hover:bg-dark-info-cards">
+                <td className="px-6 py-4 border-t text-sm text-gray-700 dark:text-dark-text">{holiday.holiday_name}</td>
+                <td className="px-6 py-4 border-t text-sm text-gray-700 dark:text-dark-text">
                   {format(new Date(holiday.holiday_date), 'MMM dd, yyyy')}
                 </td>
               </tr>

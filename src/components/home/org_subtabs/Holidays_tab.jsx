@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import apiService from '../../../api/apiService';
 import HolidayForm from '../../../utility/forms/HolidayForm';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const Holidays_tab = () => {
   const [holidays, setHolidays] = useState([]);
@@ -79,41 +80,42 @@ const Holidays_tab = () => {
 
   return (
     <div className="p-4 sm:p-6">
-      <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Holidays</h2>
+      <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 dark:text-dark-text">Holidays</h2>
 
       <button
         onClick={openModalForAdding}
-        className="mb-4 px-4 py-2 sm:px-6 sm:py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+        className="mb-4 px-4 py-2 sm:px-6 sm:py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition dark:bg-dark-add-button dark:text-dark-button-text dark:font-bold"
       >
         Add Holiday
       </button>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse table-auto bg-white shadow-md rounded-lg">
+      <div className="overflow-x-auto flex-auto">
+        <table className="min-w-full border-collapse table-auto bg-white shadow-md rounded-lg text-left dark:bg-dark-bg dark:text-dark-text">
           <thead>
             <tr>
-              <th className="px-4 py-2 border-b text-left">Holiday Name</th>
-              <th className="px-4 py-2 border-b text-left">Holiday Date</th>
-              <th className="px-4 py-2 border-b text-left">Actions</th>
+              <th className="py-2 border-b text-left">Holiday Name</th>
+              <th className="py-2 border-b text-left">Holiday Date</th>
+              <th className="py-2 border-b text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
             {holidays.map((holiday) => (
               <tr key={holiday.id}>
-                <td className="px-4 py-2 border-b">{holiday.holiday_name}</td>
-                <td className="px-4 py-2 border-b">{holiday.holiday_date}</td>
-                <td className="px-4 py-2 border-b">
+                <td className="py-2 border-b">{holiday.holiday_name}</td>
+                <td className="py-2 border-b">{holiday.holiday_date}</td>
+                <td className="py-2 border-b">
                   <button
                     onClick={() => openModalForEditing(holiday)}
-                    className="px-3 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+                    className="px-3 py-1 sm:px-4 sm:py-2 bg-yellow-600 text-white rounded-md hover:bg-blue-600 transition"
                   >
-                    Edit
+                    
+                    <FaEdit/>
                   </button>
                   <button
                     onClick={() => openDeleteConfirmationModal(holiday.id)}
-                    className="ml-2 px-3 py-1 sm:px-4 sm:py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+                    className="ml-2 px-3 py-1 sm:px-4 sm:py-2 bg-red-700 text-white rounded-md hover:bg-red-600 transition"
                   >
-                    Delete
+                    <FaTrash />
                   </button>
                 </td>
               </tr>

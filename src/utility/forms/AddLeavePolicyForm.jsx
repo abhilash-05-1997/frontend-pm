@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import InputField from "../InputField"; // Assuming you have an InputField component
 
 const AddLeavePolicyForm = ({ leaveTypes, initialData, onSave, onClose }) => {
+  // console.log("form", initialData);
+
   const [formData, setFormData] = useState({
     id: initialData?.id,
     leavename: initialData?.leave_type?.leavename || "",
@@ -10,18 +12,33 @@ const AddLeavePolicyForm = ({ leaveTypes, initialData, onSave, onClose }) => {
     carry_forward_type: initialData?.carry_forward_type || "monthly",
     leave_type: initialData?.leave_type?.id,
     carry_forward: initialData?.carry_forward || false,
-    carry_forward_days: initialData?.carry_forward_days || "",
+    carry_forward_days: initialData?.carry_forward_days || 0, // Default to 0
     company: initialData?.leave_type?.company || "",
   });
 
-  console.log("initialData", initialData);
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+
+    if (name === "carry_forward" && !checked) {
+      // When carry_forward is unchecked, reset carry_forward_days to 0
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: checked,
+        carry_forward_days: 0,
+      }));
+    } else if (name === "carry_forward_days") {
+      // Allow "0" to be entered, but don't display leading zeros
+      const numericValue = value.replace(/^0+(?=\d)/, "") || ""; // Allow empty field
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: numericValue,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -48,7 +65,7 @@ const AddLeavePolicyForm = ({ leaveTypes, initialData, onSave, onClose }) => {
               className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
               disabled={!!formData.id}
             />
-            
+
             <div>
               <label
                 htmlFor="carryForwardType"
@@ -67,12 +84,13 @@ const AddLeavePolicyForm = ({ leaveTypes, initialData, onSave, onClose }) => {
                 <option value="quarterly">Quarterly</option>
               </select>
             </div>
+
             <InputField
               label="Max Days"
               type="number"
               id="max_days"
               name="max_days"
-              value={formData.max_days}
+              value={Number(formData.max_days)}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
@@ -94,13 +112,16 @@ const AddLeavePolicyForm = ({ leaveTypes, initialData, onSave, onClose }) => {
                 Carry Forward
               </label>
             </div>
+
             {formData.carry_forward && (
               <InputField
                 label="Carry Forward Days"
                 type="number"
                 id="carry_forward_days"
                 name="carry_forward_days"
-                value={formData.carry_forward_days}
+                value={
+                  formData.carry_forward ? formData.carry_forward_days : "" // Empty field when unchecked
+                }
                 onChange={handleChange}
                 placeholder="Enter days to carry forward"
                 className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
@@ -113,7 +134,7 @@ const AddLeavePolicyForm = ({ leaveTypes, initialData, onSave, onClose }) => {
             type="textarea"
             id="description"
             name="description"
-            value={formData.description}
+            value={formData.description || ""}
             onChange={handleChange}
             className="col-span-1 sm:col-span-2 w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             rows={3}

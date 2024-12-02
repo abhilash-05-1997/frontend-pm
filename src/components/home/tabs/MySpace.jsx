@@ -29,7 +29,7 @@ const Overview = () => {
     // { label: "Approvals", key: "approvals", component: <Approvals_tab /> },
     // { label: "Feeds", key: "feeds", component: <Feeds_tab /> },
     // { label: "Leave", key: "leave", component: <Leave_tab /> },
-    { label: "Files", key: "files", component: <Files_tab /> },
+    // { label: "Files", key: "files", component: <Files_tab /> },
     // { label: "Related Data", key: "related-data", component: <RelatedData_tab /> },
   ];
 
@@ -42,12 +42,12 @@ const Overview = () => {
         {OVERVIEW_TABS.map((t) => (
           <NavLink
             key={t.key}
-            to={`/home/myspace/overview?tab=${t.key}`}
+            to={`/home/myspace/overview/?tab=${t.key}`}
             className={clsx(
-              "text-sm sm:text-base md:text-lg font-semibold px-3 py-2 rounded-md",
+              "text-sm sm:text-base md:text-lg font-semibold px-3 py-2 rounded-xl",
               tab === t.key
-                ? "text-blue-600 border-b-2 border-blue-500"
-                : "hover:text-blue-500"
+                ? "text-blue-600 border-b-2 border-blue-500 bg-gray-200 dark:text-dark-text dark:bg-dark-subtabs"
+                : "hover:text-blue-500 dark:text-dark-text"
             )}
           >
             {t.label}
@@ -99,19 +99,19 @@ const MySpace = () => {
   }, []);
 
   return (
-    <div className="bg-gray-100 min-h-screen w-full">
+    <div className=" min-h-screen w-full lg:max-h-fit md:h-full dark:bg-dark-bg">
       {/* Changed to mx-0 to prevent centering */}
-      <div className="w-full mx-0 py-6 sm:w-full md:w-full">
+      <div className="w-full mx-0 py-6 sm:w-full md:w-full dark:bg-dark-bg">
         {/* Main Tabs: Overview and Dashboard */}
-        <div className="flex flex-wrap gap-x-4 gap-y-2 mb-4 border-b-2 border-gray-200">
+        <div className="flex flex-wrap gap-x-4 gap-y-2 mb-4 border-b-[1.5px] dark:text-white border-gray-200 dark:bg-dark-bg">
           <NavLink
-            to="/home/myspace/overview"
+            to="/home/myspace/overview/"
             className={({ isActive }) =>
               clsx(
-                "text-sm sm:text-base md:text-lg px-3 py-2 font-semibold rounded-md",
+                "text-sm sm:text-base md:text-lg px-3 py-2 font-semibold rounded-xl",
                 isActive
-                  ? "text-blue-600 border-b-2 border-blue-600 bg-gray-200"
-                  : "text-gray-500 hover:text-blue-600"
+                  ? "text-blue-600 bg-gray-200 dark:text-dark-text dark:bg-dark-card"
+                  : "text-gray-500 hover:text-blue-600 dark:text-white"
               )
             }
           >
@@ -121,10 +121,10 @@ const MySpace = () => {
             to="/home/myspace/dashboard"
             className={({ isActive }) =>
               clsx(
-                "text-sm sm:text-base md:text-lg px-3 py-2 font-semibold rounded-md",
+                "text-sm sm:text-base md:text-lg px-3 py-2 font-semibold rounded-xl",
                 isActive
-                  ? "text-blue-600 border-b-2 border-blue-600 bg-gray-200"
-                  : "text-gray-500 hover:text-blue-600"
+                  ? "text-blue-600 bg-gray-200 dark:text-dark-text dark:bg-dark-card"
+                  : "text-gray-500 hover:text-blue-600 dark:text-white"
               )
             }
           >
@@ -132,7 +132,7 @@ const MySpace = () => {
           </NavLink>
         </div>
   
-        {location.pathname === "/home/myspace/overview" && (
+        {location.pathname === "/home/myspace/overview/" && (
           <Header
             backgroundImage={space_image}
             title={`${user.first_name || "User "} ${user.last_name || ""}`}

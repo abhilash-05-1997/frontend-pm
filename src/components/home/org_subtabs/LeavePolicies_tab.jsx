@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import AddLeavePolicyForm from "../../../utility/forms/AddLeavePolicyForm";
 import apiService from "../../../api/apiService";
 import { toast } from "react-toastify";
+import {FaDumpster, FaEdit, FaRecycle, FaTrash} from 'react-icons/fa'
+import { FaDeleteLeft } from "react-icons/fa6";
 
 const LeavePolicies_tab = () => {
   const [policies, setPolicies] = useState([]);
@@ -67,14 +69,12 @@ const LeavePolicies_tab = () => {
   
 
   const openEditModal = async (policyId) => {
-    console.log("POLICY ID FOR EDITING", policyId);
-
     try {
       const response = await apiService.fetchInstance(
         `${API_ENDPOINTS.POLICY_DATA_API}${policyId}/`
       );
-      console.log("response for editing policy", response.data);
-      setSelectedPolicy(response.data); // Prepopulate with data from both tables
+    
+      setSelectedPolicy(response.data); // Prepopulate with data from both tables      
       setIsModalOpen(true);
     } catch (error) {
       console.error("Error fetching policy details:", error);
@@ -140,8 +140,6 @@ const LeavePolicies_tab = () => {
           carry_forward: policyData.carry_forward,
         }
       );
-      console.log("Addiing-response", response.data);
-      
       toast.success("Policy added successfully!");
       fetchPolicies();
       fetchLeaveTypes();
@@ -153,67 +151,7 @@ const LeavePolicies_tab = () => {
     }
   };
   
-
-  // const handleEditPolicy = async (policyData) => {
-  //   console.log("max_days", policyData.max_days);
-  //   console.log("policyData", policyData);
-    
-    
-  //   try {
-  //     // const updatedPolicy = {
-  //     // max_days: policyData.max_days,
-  //     // carry_forward_days: policyData.carry_forward_days,
-  //     // carry_forward_type: policyData.carry_forward_type,
-  //     // carry_forward: policyData.carry_forward,
-  //     // leave_type: {
-  //     //   id: policyData.leave_type.id,
-  //     //   leavename: policyData.leavename,
-  //     //   leave_description: policyData.description,
-  //     //   company: localStorage.getItem("company_id"),
-  //     // },
-  //     // };
-  //     const id = policyData.leave_type;
-  //     console.log("id", id);
-
-  //     const leavePolicyid = policyData.id;
-      
-  //     const updatedleavetype = {
-  //       // id: policyData.id,
-  //       leavename: policyData.leavename,
-  //       leave_description: policyData.description,
-  //       company: localStorage.getItem("company_id"),
-  //     }
-
-  //     const updatedLeavePolicy = {
-  //       max_days: policyData.max_days,
-  //       carry_forward_days: policyData.carry_forward_days,
-  //       carry_forward_type: policyData.carry_forward_type,
-  //       carry_forward: policyData.carry_forward
-  //     }
-
-  //     const response = await apiService.modifyInstance(
-  //       `${API_ENDPOINTS.UPDATE_LEAVE_TYPE}${id}/update/`, updatedleavetype);
-  //     console.log("Policy updated successfully:", response.data);
-
-
-  //     const updatedPolicy =await apiService.modifyInstance(`${API_ENDPOINTS.UPDATE_LEAVE_POLICY}${leavePolicyid}/update/`, updatedLeavePolicy);
-  //     console.log("updatedpolicy", updatedPolicy.data);
-      
-  //     toast.success("Policy Updated Successfully...")
-  //     fetchPolicies(); // Refresh the list of policies
-  //     setIsModalOpen(false);
-  //     setSelectedPolicy(null);
-  //   } catch (error) {
-  //     toast.error("failed to Update Policy!!!");
-  //     console.error("Error editing policy:", error);
-  //   }
-  // };
-
-  
   const handleEditPolicy = async (policyData) => {
-    console.log("max_days", policyData.max_days);
-    console.log("policyData", policyData);
-  
     try {
       const leaveTypeId = policyData.leave_type;  // The ID of the leave type to be updated
       const leavePolicyId = policyData.id;  // The ID of the leave policy to be updated
@@ -235,8 +173,6 @@ const LeavePolicies_tab = () => {
         `${API_ENDPOINTS.UPDATE_LEAVE_POLICY}`,
         updatedData
       );
-  
-      console.log("Policy updated successfully:", response.data);
       toast.success("Policy Updated Successfully...");
   
       // Refresh the policy list and close the modal
@@ -249,28 +185,12 @@ const LeavePolicies_tab = () => {
     }
   };
   
-  
-  // const handleDelete = async (policyId) => {
-  //   console.log("policyId", policyToDelete);
-  //   try {
-  //     await apiService.deleteInstance(
-  //       `${API_ENDPOINTS.DELETE_POLICY}${policyToDelete}/delete/`
-  //     );
-  //     setPolicies(policies.filter((policy) => policy.id !== policyId));
-  //     setIsDeleteModalOpen(false);
-  //   } catch (error) {
-  //     console.error("Error deleting policy:", error);
-  //   }
-    
-  // };
-
   const handleDelete = async () => {
     try {
       const response = await apiService.deleteInstance(
         `${API_ENDPOINTS.DELETE_LEAVE_POLICY}?leave_type_id=${policyToDelete}`,// Sending the policy ID to delete
       );
   
-      console.log("Leave policy and associated leave type deleted successfully:", response.data);
       toast.success("Policy Deleted Successfully...");
   
       // Refresh the policy list after deletion
@@ -284,14 +204,13 @@ const LeavePolicies_tab = () => {
   
 
   const openDeleteConfirmationModal = (policyId) => {
-    console.log("policyid", policyId);
     setPolicyToDelete(policyId);
     setIsDeleteModalOpen(true);
   };
 
   return (
-    <div className="p-4 sm:p-6">
-      <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
+    <div className="p-4 sm:p-6 dark:bg-dark-bg dark:text-dark-text">
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-start">
         Leave Policies
       </h2>
 
@@ -300,7 +219,7 @@ const LeavePolicies_tab = () => {
           setSelectedPolicy(null);
           setIsModalOpen(true);
         }}
-        className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 sm:px-6 sm:py-2"
+        className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 sm:px-6 sm:py-2 justify-end dark:bg-dark-add-button dark:text-dark-button-text font-bold"
       >
         Add Leave Policy
       </button>
@@ -343,15 +262,15 @@ const LeavePolicies_tab = () => {
                 <td className="px-4 py-2 border-b">
                   <button
                     onClick={() => openEditModal(policy.id)}
-                    className="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                    className="px-2 py-1 bg-yellow-600 text-white rounded-md hover:bg-blue-600"
                   >
-                    Edit
+                    <FaEdit/>
                   </button>
                   <button
                     onClick={() => openDeleteConfirmationModal(policy.leave_type)}
-                    className="px-2 py-1 sm:px-4 sm:py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                    className="px-2 py-1 mx-2 bg-red-700 text-white rounded-md hover:bg-blue-600"
                   >
-                    Delete
+                    <FaTrash/>
                   </button>
                 </td>
               </tr>

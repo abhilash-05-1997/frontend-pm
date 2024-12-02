@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import apiService from "../../api/apiService";
+import {  useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -12,7 +11,7 @@ const ForgotPassword = () => {
   const FORGOT_PASSWORD = 'accounts/forgot-password/'
 
   const handleSubmit = async(e) => {
-    console.log("EMAIL", email);
+    // console.log("EMAIL", email);
     
     e.preventDefault();
     if (email) {
@@ -24,8 +23,7 @@ const ForgotPassword = () => {
       }  
     }
     
-    //Check the user email exists and send a password reset link via email
-     // Simulating 2 seconds before redirecting
+      //Check the user email exists and send a password reset link via email
     else {
       toast.error("Please Enter a valid email address.")
       setMessage("Please enter a valid email address.");

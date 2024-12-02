@@ -1,9 +1,17 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import cronLabsLogo from "../../../../src/assets/cron-labs-logo.jpeg";
+import {
+  FaCalendarCheck,
+  FaHome,
+  FaSignOutAlt,
+  FaMoon,
+  FaSun,
+} from "react-icons/fa";
+import clsx from "clsx";
 
 const PROFILE_DROPDOWN = ["Dashboard", "Sign out"];
-const SIDEBAR_LINKS = ["Home", "LeaveTracker" ];
+const SIDEBAR_LINKS = ["Home", "LeaveTracker"];
 
 const ProfileDropdown = ({ isDropdownOpen, toggleDropdown, dropdownRef }) => (
   <div className="flex items-center ms-3 relative">
@@ -48,13 +56,17 @@ const ProfileDropdown = ({ isDropdownOpen, toggleDropdown, dropdownRef }) => (
   </div>
 );
 
+const ICONS = {
+  Home: <FaHome className="w-5 h-5" />,
+  LeaveTracker: <FaCalendarCheck className="w-5 h-5" />,
+  Logout: <FaSignOutAlt className="w-5 h-5" />,
+};
+
 const SidebarLinks = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
-    // You can clear user session or authentication tokens here if necessary
-    // Example: localStorage.removeItem('userToken');
-    // After logging out, redirect to the login page
     navigate("/login");
   };
 
@@ -65,13 +77,19 @@ const SidebarLinks = () => {
           <NavLink
             to={
               item === "Home"
-                ? "home/myspace/overview?tab=activities"
+                ? "home/myspace/overview/?tab=profile"
                 : item === "LeaveTracker"
                 ? "leavetracker/mydata/leave-summary"
                 : `/${item.toLowerCase()}/`
             }
-            className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+            className={clsx(
+              "flex items-center p-2 rounded-lg",
+              location.pathname.includes(item.toLowerCase())
+                ? "bg-blue-400 text-black dark:bg-dark-card dark:text-dark-text"
+                : "text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+            )}
           >
+            {ICONS[item]}
             <span className="ml-3">{item}</span>
           </NavLink>
         </li>
@@ -81,6 +99,7 @@ const SidebarLinks = () => {
           onClick={handleLogout}
           className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
         >
+          {ICONS["Logout"]}
           <span className="ml-3">Logout</span>
         </button>
       </li>
@@ -91,6 +110,10 @@ const SidebarLinks = () => {
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(
+    localStorage.getItem("theme") === "dark"
+  );
+
   const sidebarRef = useRef(null);
   const dropdownRef = useRef(null);
 
@@ -98,12 +121,17 @@ const Sidebar = () => {
     () => setIsSidebarOpen((prev) => !prev),
     []
   );
-
   const closeSidebar = useCallback(() => setIsSidebarOpen(false), []);
   const toggleDropdown = useCallback((e) => {
     e.stopPropagation();
     setIsDropdownOpen((prev) => !prev);
   }, []);
+  const toggleTheme = () => {
+    const newTheme = isDarkMode ? "light" : "dark";
+    setIsDarkMode((prev) => !prev);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.classList.toggle("dark", newTheme === "dark");
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -117,11 +145,17 @@ const Sidebar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isSidebarOpen, isDropdownOpen, closeSidebar]);
 
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setIsDarkMode(savedTheme === "dark");
+    document.documentElement.classList.toggle("dark", savedTheme === "dark");
+  }, []);
+
   return (
     <div className="flex flex-col h-screen">
       {/* Navbar */}
-      <nav className="fixed top-0 z-50 w-full bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-        <div className="flex items-center justify-between px-3 py-3 lg:px-5">
+      <nav className="fixed top-0 z-50 w-full bg-white border-b dark:bg-dark-bg dark:border-gray-700">
+          <div className="flex items-center justify-between px-3 py-3 lg:px-5">
           <button
             onClick={toggleSidebar}
             type="button"
@@ -147,18 +181,31 @@ const Sidebar = () => {
               Cron Labs
             </span>
           </NavLink>
-          <ProfileDropdown
-            isDropdownOpen={isDropdownOpen}
-            toggleDropdown={toggleDropdown}
-            dropdownRef={dropdownRef}
-          />
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-gray-500 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700"
+            >
+              {isDarkMode ? (
+                <FaSun className="w-5 h-5" />
+              ) : (
+                <FaMoon className="w-5 h-5" />
+              )}
+              <span className="sr-only">Toggle theme</span>
+            </button>
+            <ProfileDropdown
+              isDropdownOpen={isDropdownOpen}
+              toggleDropdown={toggleDropdown}
+              dropdownRef={dropdownRef}
+            />
+          </div>
         </div>
       </nav>
 
       {/* Sidebar */}
       <aside
         ref={sidebarRef}
-        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform bg-white border-r dark:bg-gray-800 dark:border-gray-700 
+        className={`fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform bg-white border-r dark:bg-dark-bg dark:border-gray-700 
           ${
             isSidebarOpen
               ? "translate-x-0"
@@ -173,7 +220,7 @@ const Sidebar = () => {
 
       {/* Main content */}
       <div
-        className={`flex-1 pt-16 sm:pl-64 transition-all duration-300 w-full ${
+        className={`flex-1 pt-14 sm:pl-64 transition-all duration-300 w-full dark:bg-dark-bg ${
           isSidebarOpen ? "opacity-50 sm:opacity-100" : ""
         }`}
         onClick={isSidebarOpen ? closeSidebar : null}

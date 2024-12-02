@@ -18,14 +18,8 @@ const LeaveRequests = () => {
         return;
       }
 
-      const response = await apiService.fetchInstance("api/reportees/leave-requests/");
-      console.log("response ", response.data);
-
-      // Safely handle response data
-      
-        setReportees(response.data.results);
-        console.log("My message",reportees);
-     
+    const response = await apiService.fetchInstance("api/reportees/leave-requests/");
+    setReportees(response.data.results);
         // console.error("Expected an array but got:", response.data);
         // setReportees([]);
     } catch (error) {

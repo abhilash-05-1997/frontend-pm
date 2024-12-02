@@ -58,7 +58,7 @@ const HolidayForm = ({holiday, onClose, onSave }) => {
             type="submit"
             className="px-4 py-2 bg-indigo-600 text-white rounded-md"
           >
-   l         Save Holiday
+           Save Holiday
           </button>
         </div>
       </form>

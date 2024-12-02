@@ -20,7 +20,7 @@ const Reportees = () => {
       const response = await apiService.fetchInstance(
         "api/reportees/leave-balances/"
       );
-      console.log("response ", response);
+      // console.log("response ", response);
 
       // Grouping the data by reportee name
       const groupedData = response.data.reduce((acc, current) => {
@@ -65,25 +65,25 @@ const Reportees = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto bg-white shadow-2xl rounded-lg p-8 sm:p-10 lg:p-12 mt-8">
-      <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-black-300">
+    <div className="max-w-6xl mx-auto bg-white shadow-2xl rounded-lg p-8 sm:p-10 lg:p-12 mt-8 dark:bg-dark-bg">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-black-300 dark:text-dark-text">
         Reportees Leave Information
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8">
         {Object.keys(reporteesData).map((reportee, index) => (
           <div
             key={index}
-            className="bg-gradient-to-r from-indigo-50 via-purple-50 to-indigo-100 border border-gray-200 p-6 rounded-lg shadow-xl transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl"
+            className="bg-gradient-to-r dark:bg-dark-info-cards border-gray-200 p-6 rounded-lg shadow-xl transform transition duration-300 ease-in-out hover:scale-105 hover:shadow-2xl"
           >
             <div className="flex items-center mb-4">
               <FaRegUser className="text-3xl text-indigo-600 mr-3" />
-              <h3 className="text-xl font-semibold text-gray-800">
+              <h3 className="text-xl font-semibold text-gray-800 dark:text-dark-text">
                 {reportee}
                 <span
                   className={`ml-2 text-sm font-semibold ${
                     reporteesData[reportee].on_leave_today
-                      ? "text-red-600"
-                      : "text-green-600"
+                      ? "text-red-500"
+                      : "text-green-400"
                   }`}
                 >
                   {reporteesData[reportee].on_leave_today
@@ -98,16 +98,16 @@ const Reportees = () => {
                   (leave, leaveIndex) => (
                     <li
                       key={leaveIndex}
-                      className="flex justify-between items-center p-3 border rounded-lg bg-white shadow-sm hover:bg-indigo-50 transition-colors"
+                      className="flex justify-between items-center p-3 border rounded-lg bg-white shadow-sm hover:bg-indigo-50 transition-colors dark:bg-dark-info-cards dark:border-0-gray"
                     >
-                      <span className="font-bold">{leave.leave_type}:</span>
+                      <span className="font-bold dark:text-dark-text">{leave.leave_type}:</span>
                       <div className="flex flex-col items-end">
-                        <span className="text-sm text-gray-600">Total Taken</span>
-                        <span className="font-semibold text-gray-800">{leave.total_taken}</span>
+                        <span className="text-sm text-gray-600 dark:text-dark-text">Total Taken</span>
+                        <span className="font-semibold text-gray-800 dark:text-dark-text">{leave.total_taken}</span>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-sm text-gray-600">Remaining Balance</span>
-                        <span className="font-semibold text-gray-800">{leave.remaining_balance}</span>
+                        <span className="text-sm text-gray-600 dark:text-dark-text">Remaining Balance</span>
+                        <span className="font-semibold text-gray-800 dark:text-dark-text">{leave.remaining_balance}</span>
                       </div>
                     </li>
                   )

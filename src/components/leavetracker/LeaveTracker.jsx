@@ -12,7 +12,7 @@
   import LeaveRequests from "./team/LeaveRequests";
   import OnLeave from "./team/OnLeave";
   import Reportees from "./team/Reportees";
-import Holidays from "./holidays/Holidays";
+  import Holidays from "./holidays/Holidays";
 
   // Reusable Tab Link
   const TabLink = ({ to, children }) => {
@@ -22,10 +22,10 @@ import Holidays from "./holidays/Holidays";
     return (
       <Link
         to={to}
-        className={`px-4 py-2 text-lg font-semibold ${
+        className={`px-4 py-2 pb-2 text-lg font-semibold rounded-md transition duration-300 ]${
           isActive
-            ? "text-blue-600 border-b-2 border-blue-600 bg-gray-200"
-            : "text-gray-600 hover:text-blue-600"
+            ? "text-blue-600 light:border-blue-600 bg-gray-200 dark:bg-dark-card dark:text-dark-text rounded-xl"
+            : "text-gray-600 hover:text-blue-600 dark:text-dark-text"
         }`}
       >
         {children}
@@ -38,15 +38,15 @@ import Holidays from "./holidays/Holidays";
     const location = useLocation();
 
     return (
-      <div className="flex flex-wrap gap-3 justify-self-start md:justify-evenly mb-6">
+      <div className="flex flex-wrap gap-3 justify-self-start md:justify-evenly dark:text-dark-text py-4 pb-2 px-4">
         {tabs.map((tab) => (
           <Link
             key={tab.path}
             to={`${tab.path}`} // Use basePath directly
-            className={`px-4 py-2 rounded-md transition duration-300 ${
-              location.pathname.startsWith(`/${basePath}/${tab.path}`)
-                ? "bg-blue-100 text-blue-600"
-                : "hover:bg-blue-100 hover:text-blue-600"
+            className={`px-3 font-semibold py-2 pb-2 rounded-xl transition duration-300 sm:py-3 ${
+              location.pathname.includes(`/${basePath}/${tab.path}`)
+                ? "bg-blue-100 text-blue-600 dark:bg-dark-card dark:text-dark-text"
+                : "hover:bg-blue-100 hover:text-blue-600 dark:hover:bg-purple-600 dark:hover:text-dark-text"
             }`}
           >
             {tab.label}
@@ -87,10 +87,10 @@ import Holidays from "./holidays/Holidays";
 
   // Main LeaveTracker Component
   const LeaveTracker = () => (
-    <div className="mt-4">
+    <div className="pt-4 dark:bg-dark-bg px-4 mx-auto">
       {/* Main Tab Navigation */}
-      <div className="mb-4">
-        <div className="flex justify-between sm:justify-start sm:border-b sm:border-gray-300">
+      <div>
+        <div className="flex justify-between sm:justify-start sm:border-b sm:border-gray-200 dark:sm:border-gray-600 dark:bg-dark-bg pb-2 sm:py-2 mt-[-0.65rem]">
           <TabLink to="team">Team</TabLink>
           <TabLink to="mydata">My Data</TabLink>
           <TabLink to="holidays">Holidays</TabLink>
@@ -98,7 +98,7 @@ import Holidays from "./holidays/Holidays";
       </div>
 
       {/* Routes Configuration */}
-      <div className="p-4">
+      <div>
         <Routes>
           {/* <Route path="/" element={<div>Welcome to Leave Tracker</div>} /> */}
           {/* My Data Routes */}

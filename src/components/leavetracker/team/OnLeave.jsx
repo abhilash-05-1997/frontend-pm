@@ -23,7 +23,7 @@ const OnLeave = () => {
       }
 
       const response = await apiService.fetchInstance("api/reportees/leave-balances/");
-      console.log("response ", response);
+      // console.log("response ", response);
 
       // Filter reportees who are on leave today
       const onLeave = response.data.filter((reportee) => reportee.on_leave_today);
@@ -39,8 +39,8 @@ const OnLeave = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-lg p-6 sm:p-8 lg:p-10">
-      <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-black-300">
+    <div className="max-w-6xl mx-auto bg-white shadow-xl rounded-lg p-6 sm:p-8 lg:p-10 dark:bg-dark-bg">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-center text-black-300 dark:text-dark-text">
         Reportees On Leave Today
       </h2>
       
@@ -56,9 +56,9 @@ const OnLeave = () => {
         onLeaveReportees.map((reportee, index) => (
           <div
             key={index}
-            className="bg-white border border-gray-200 p-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-1 hover:shadow-2xl mb-6"
+            className="bg-white border border-gray-200 p-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-1 hover:shadow-2xl mb-6 dark:bg-dark-info-cards dark:border-none"
           >
-            <h3 className="text-lg sm:text-xl font-semibold mb-3 text-gray-800 flex items-center justify-between">
+            <h3 className="text-lg sm:text-xl font-semibold mb-3 text-gray-800 flex items-center justify-between dark:text-dark-text" >
               <span>
                 {reportee.reportee_first_name} {reportee.reportee_last_name}
               </span>
@@ -69,7 +69,7 @@ const OnLeave = () => {
               {reportee.leave_types && reportee.leave_types.length > 0 ? (
                 <ul className="list-disc pl-4">
                   {reportee.leave_types.map((leave, leaveIndex) => (
-                    <li key={leaveIndex} className="mb-2">
+                    <li key={leaveIndex} className="mb-2 dark:text-dark-text">
                       <span className="font-bold">{leave.leave_type}:</span> 
                       <span className="text-gray-800"> Total Taken - {leave.total_taken}, </span>
                       <span className="text-gray-800">Remaining - {leave.remaining_balance}</span>
@@ -84,7 +84,7 @@ const OnLeave = () => {
         ))
       ) : (
         <div className="text-center text-gray-600">
-          <FaRegSadTear className="mx-auto mb-2 text-4xl text-gray-400" />
+          <FaRegSadTear className="mx-auto mb-2 text-4xl text-gray-400 dark:text-dark-text" />
           There are no members on leave today.
         </div>
       )}
