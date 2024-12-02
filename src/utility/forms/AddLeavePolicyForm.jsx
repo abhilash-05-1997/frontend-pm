@@ -47,13 +47,13 @@ const AddLeavePolicyForm = ({ leaveTypes, initialData, onSave, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-full max-w-lg sm:max-w-lg lg:max-w-3xl p-6 bg-white rounded-lg shadow-lg">
-        <h2 className="text-3xl lg:text-4xl font-bold text-blue-700 text-center mb-8">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 dark:bg-dark-bg dark:text-dark-text">
+      <div className="w-full max-w-lg sm:max-w-lg lg:max-w-3xl p-6 bg-white rounded-lg shadow-lg dark:bg-dark-bg dark:text-dark-text">
+        <h2 className="text-3xl lg:text-4xl font-bold text-blue-700 text-center mb-8  dark:bg-dark-bg dark:text-dark-text">
           Add Leave Types
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit} className="space-y-6 dark:bg-dark-bg dark:text-dark-text">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6  dark:bg-dark-bg dark:text-dark-text" >
             <InputField
               label="Leave Name"
               type="text"
@@ -62,7 +62,7 @@ const AddLeavePolicyForm = ({ leaveTypes, initialData, onSave, onClose }) => {
               value={formData.leavename}
               onChange={handleChange}
               required
-              className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-dark-bg dark:text-dark-text"
               disabled={!!formData.id}
             />
 
@@ -78,7 +78,7 @@ const AddLeavePolicyForm = ({ leaveTypes, initialData, onSave, onClose }) => {
                 name="carry_forward_type"
                 value={formData.carry_forward_type}
                 onChange={handleChange}
-                className="block mt-2 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="block mt-2 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500  dark:bg-dark-bg dark:text-dark-text"
               >
                 <option value="monthly">Monthly</option>
                 <option value="quarterly">Quarterly</option>
@@ -96,18 +96,18 @@ const AddLeavePolicyForm = ({ leaveTypes, initialData, onSave, onClose }) => {
               className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             />
 
-            <div className="col-span-1 sm:col-span-2 flex items-center">
+            <div className="col-span-1 sm:col-span-2 flex items-center  dark:bg-dark-bg dark:text-dark-text">
               <input
                 type="checkbox"
                 name="carry_forward"
                 id="carry_forward"
                 checked={formData.carry_forward}
                 onChange={handleChange}
-                className="mr-2"
+                className="mr-2  dark:bg-dark-bg dark:text-dark-text"
               />
               <label
                 htmlFor="carry_forward"
-                className="text-sm font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700  dark:bg-dark-bg dark:text-dark-text"
               >
                 Carry Forward
               </label>
@@ -136,7 +136,7 @@ const AddLeavePolicyForm = ({ leaveTypes, initialData, onSave, onClose }) => {
             name="description"
             value={formData.description || ""}
             onChange={handleChange}
-            className="col-span-1 sm:col-span-2 w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            className="col-span-1 sm:col-span-2 w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500  dark:bg-dark-bg dark:text-dark-text"
             rows={3}
             required
           />

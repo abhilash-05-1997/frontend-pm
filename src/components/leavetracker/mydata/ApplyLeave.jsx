@@ -140,17 +140,17 @@ const ApplyLeave = ({ isOpen, onClose, leaveTypes, holidays, employeeId, manager
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto dark:bg-dark-bg">
-      <div className="w-full max-w-md sm:max-w-lg lg:max-w-3xl p-6 bg-white rounded-lg shadow-lg overflow-y-auto max-h-[90vh]">
-        <h2 className="text-3xl lg:text-4xl font-bold text-blue-700 text-center mb-8">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto  dark:bg-dark-bg dark:text-dark-text">
+      <div className="w-full max-w-md sm:max-w-lg lg:max-w-3xl p-6 bg-white rounded-lg shadow-lg overflow-y-auto max-h-[90vh]  dark:bg-dark-bg dark:text-dark-text">
+        <h2 className="text-3xl lg:text-4xl font-bold text-blue-700 text-center mb-8  dark:bg-dark-bg dark:text-dark-text">
           Apply Leave
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6  dark:bg-dark-bg dark:text-dark-text">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="col-span-1 sm:col-span-2">
               <label
                 htmlFor="leaveType"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700  dark:bg-dark-bg dark:text-dark-text" 
               >
                 Leave Type
               </label>
@@ -159,7 +159,7 @@ const ApplyLeave = ({ isOpen, onClose, leaveTypes, holidays, employeeId, manager
                 name="leaveType"
                 value={leaveType}
                 onChange={(e) => setLeaveType(e.target.value)}
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500  dark:bg-dark-bg dark:text-dark-text"
                 required
               >
                 <option value="" disabled>
