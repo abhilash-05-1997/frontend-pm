@@ -101,7 +101,7 @@ const MySpace = () => {
   return (
     <div className=" min-h-screen w-full lg:max-h-fit md:h-full dark:bg-dark-bg">
       {/* Changed to mx-0 to prevent centering */}
-      <div className="w-full mx-0 py-6 sm:w-full md:w-full dark:bg-dark-bg">
+      <div className="w-full mx-0 py-2  sm:w-full md:w-full dark:bg-dark-bg">
         {/* Main Tabs: Overview and Dashboard */}
         <div className="flex flex-wrap gap-x-4 gap-y-2 mb-4 border-b-[1.5px] dark:text-white border-gray-200 dark:bg-dark-bg">
           <NavLink
@@ -110,8 +110,8 @@ const MySpace = () => {
               clsx(
                 "text-sm sm:text-base md:text-lg px-3 py-2 font-semibold rounded-xl",
                 isActive
-                  ? "text-blue-600 bg-gray-200 dark:text-dark-text dark:bg-dark-card"
-                  : "text-gray-500 hover:text-blue-600 dark:text-white"
+                  ? "bg-blue-100 text-blue-600 dark:text-dark-text dark:bg-dark-card"
+                  : "hover:bg-blue-100 hover:text-blue-600 dark:text-white"
               )
             }
           >
@@ -123,8 +123,8 @@ const MySpace = () => {
               clsx(
                 "text-sm sm:text-base md:text-lg px-3 py-2 font-semibold rounded-xl",
                 isActive
-                  ? "text-blue-600 bg-gray-200 dark:text-dark-text dark:bg-dark-card"
-                  : "text-gray-500 hover:text-blue-600 dark:text-white"
+                  ? "bg-blue-100 text-blue-600 dark:text-dark-text dark:bg-dark-card"
+                  : "hover:bg-blue-100 hover:text-blue-600 dark:text-white"
               )
             }
           >

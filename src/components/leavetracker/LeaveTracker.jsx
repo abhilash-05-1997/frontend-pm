@@ -86,12 +86,14 @@
   );
 
   // Main LeaveTracker Component
-  const LeaveTracker = () => (
+  const LeaveTracker = () => {
+    const role = localStorage.getItem('Role');
+  return(
     <div className="pt-4 dark:bg-dark-bg px-4 mx-auto">
       {/* Main Tab Navigation */}
       <div>
         <div className="flex justify-between sm:justify-start sm:border-b sm:border-gray-200 dark:sm:border-gray-600 dark:bg-dark-bg pb-2 sm:py-2 mt-[-0.65rem]">
-          <TabLink to="team">Team</TabLink>
+        {(role === 'Manager' || role === 'Admin') && <TabLink to="team">Team</TabLink>}
           <TabLink to="mydata">My Data</TabLink>
           <TabLink to="holidays">Holidays</TabLink>
         </div>
@@ -123,5 +125,6 @@
       </div>
     </div>
   );
+  }
 
   export default LeaveTracker;

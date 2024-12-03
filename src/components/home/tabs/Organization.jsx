@@ -4,7 +4,7 @@ import { FaClipboardCheck, FaUser, FaCalendar, FaUsers } from "react-icons/fa"; 
 import NewHire_tab from "../org_subtabs/NewHire_tab";
 import LeavePolicies_tab from "../org_subtabs/LeavePolicies_tab";
 import Holidays_tab from "../org_subtabs/Holidays_tab";
-import Employee_tab from "../org_subtabs/EmployeeTree_tab";
+import Employee_tab from "../org_subtabs/Employee_tab";
 
 const Organization = () => {
   const { search } = useLocation();
