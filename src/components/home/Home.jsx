@@ -39,7 +39,7 @@ const mainTabs = [
   { name: "Organization", path: "/home/organization?tab=new-hires" },
 ];
 
-const filteredTabs = role === 'Employee'
+const filteredTabs = role === 'Employee' || role === 'Manager'
   ? mainTabs.filter(tab => tab.name !== "Organization")
   : mainTabs;
   
@@ -49,7 +49,7 @@ const filteredTabs = role === 'Employee'
     <div className="bg-gray-100 dark:bg-dark-bg w-full">
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6">
         {/* Main Tabs */}
-        <div className="light:bg-white flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 gap-2 sm:gap-4 border-b dark:border-gray-700 py-4 ">
+        <div className="light:bg-white flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 gap-2 sm:gap-4 border-b dark:border-gray-700 py-3">
           {filteredTabs.map((tab, index) => {
             // Log tab details for debugging
             // Determine if the tab is active
@@ -61,7 +61,7 @@ const filteredTabs = role === 'Employee'
                 to={tab.path.toLowerCase().replace(" ", "")}
                 end
                 className={() =>
-                  `text-base sm:text-lg font-semibold pb-2 px-3 sm:px-4 sm:py-2 rounded-xl ${
+                  `text-base sm:text-lg font-semibold px-3 sm:px-4 sm:py-2 rounded-xl ${
                     isActive
                       ? "text-black bg-gray-200 dark:bg-dark-card dark:text-dark-text"
                       : "text-gray-500 hover:text-blue-500 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"

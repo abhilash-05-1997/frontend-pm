@@ -101,7 +101,7 @@ const MySpace = () => {
   return (
     <div className=" min-h-screen w-full lg:max-h-fit md:h-full dark:bg-dark-bg">
       {/* Changed to mx-0 to prevent centering */}
-      <div className="w-full mx-0 py-2  sm:w-full md:w-full dark:bg-dark-bg">
+      <div className="w-full mx-0 py-2 sm:w-full md:w-full dark:bg-dark-bg">
         {/* Main Tabs: Overview and Dashboard */}
         <div className="flex flex-wrap gap-x-4 gap-y-2 mb-4 border-b-[1.5px] dark:text-white border-gray-200 dark:bg-dark-bg">
           <NavLink

@@ -47,7 +47,8 @@ const LeaveRequestsTable = ({ data, showActions = false, onStatusChange }) => {
             <option value="Pending">Pending</option>
           </select>
           <span className="text-sm text-gray-600 dark:bg-dark-info-cards dark:text-dark-text p-0">
-            Total Records: <strong className="dark:bg-dark-info-cards">{totalRecords}</strong>
+            Total Records:{" "}
+            <strong className="dark:bg-dark-info-cards">{totalRecords}</strong>
           </span>
         </div>
         <div className="flex items-center space-x-2">
@@ -60,7 +61,9 @@ const LeaveRequestsTable = ({ data, showActions = false, onStatusChange }) => {
             <option value={20}>20</option>
             <option value={30}>30</option>
           </select>
-          <span className="text-sm text-gray-600 dark:text-dark-text">Records per page</span>
+          <span className="text-sm text-gray-600 dark:text-dark-text">
+            Records per page
+          </span>
         </div>
       </div>
 
@@ -79,7 +82,10 @@ const LeaveRequestsTable = ({ data, showActions = false, onStatusChange }) => {
           </thead>
           <tbody>
             {paginatedData.map((request, index) => (
-              <tr key={index} className="border-b hover:bg-gray-50 dark:text-dark-text dark:hover:bg-dark-info-cards text-center">
+              <tr
+                key={index}
+                className="border-b hover:bg-gray-50 dark:text-dark-text dark:hover:bg-dark-info-cards text-center"
+              >
                 <td className="px-2 sm:px-4 py-2 text-center">
                   {request.status_of_leave === "Pending" && "⏳"}
                   {request.status_of_leave === "Approved" && "✔️"}
@@ -95,11 +101,14 @@ const LeaveRequestsTable = ({ data, showActions = false, onStatusChange }) => {
                 </td>
                 <td className="px-2 sm:px-4 py-2">
                   {request.leave_dates.length > 0
-                    ? request.leave_dates.map((date, index) => (
-                        <ul key={index}>
-                          <li>{date.date}</li>
-                        </ul>
-                      ))
+                    ? (() => {
+                        const dates = request.leave_dates.map(
+                          (date) => new Date(date.date)
+                        );
+                        const minDate = new Date(Math.min(...dates));
+                        const maxDate = new Date(Math.max(...dates));
+                        return `${minDate.toLocaleDateString()} - ${maxDate.toLocaleDateString()}`;
+                      })()
                     : "N/A"}
                 </td>
                 {showActions && (

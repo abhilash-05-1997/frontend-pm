@@ -90,7 +90,7 @@ const AddLeavePolicyForm = ({ leaveTypes, initialData, onSave, onClose }) => {
               type="number"
               id="max_days"
               name="max_days"
-              value={Number(formData.max_days)}
+              value={(formData.max_days)}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"

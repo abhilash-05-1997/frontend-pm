@@ -47,6 +47,7 @@ const LeaveRequests = () => {
           reportee.id === leaveId ? { ...reportee, status_of_leave: action } : reportee
         )
       );
+      fetchReporteesLeaveRequests();
     } catch (error) {
       console.error(`Error ${action}ing leave request:`, error);
       alert(`Failed to ${action} the leave request.`);

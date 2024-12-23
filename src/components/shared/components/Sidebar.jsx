@@ -67,6 +67,7 @@ const SidebarLinks = () => {
   const location = useLocation();
 
   const handleLogout = () => {
+    localStorage.clear();
     navigate("/login");
   };
 
