@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import EditProfile from "./EditProfile";
+import EditEducation from "./EditEducation";
 import apiService from "../../../api/apiService";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
-
 
 const Profile = () => {
   const [profileData, setProfileData] = useState({
@@ -17,10 +17,15 @@ const Profile = () => {
     MotherName: "",
   });
 
+  const [educationData, setEducationData] = useState([]);
+  const [selectedEducation, setSelectedEducation] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
 
   const GET_PROFILE_DATA = "api/profile/";
   const MODIFY_PROFILE_DATA = "api/profile/";
+  const MODIFY_EDUCATION_DATA = "api/education/";
+  const GET_EDUCATION_DATA = "api/education/";
 
   // Fetch profile data on component mount
   useEffect(() => {
@@ -47,12 +52,33 @@ const Profile = () => {
       }
     };
 
+    const fetchEducationData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          console.error("No token found");
+          return;
+        }
+
+        const response = await apiService.fetchInstance(GET_EDUCATION_DATA);
+        setEducationData(response.data);
+      } catch (error) {
+        console.error("Error fetching education data:", error);
+      }
+    };
+
     fetchProfileData();
+    fetchEducationData();
   }, []);
 
   // Handle opening the Edit Modal
   const handleEditClick = () => {
     setIsModalOpen(true);
+  };
+
+  const handleEditEducationClick = (education) => {
+    setSelectedEducation(education);
+    setIsEducationModalOpen(true);
   };
 
   // Handle profile update submission
@@ -87,6 +113,33 @@ const Profile = () => {
     }
   };
 
+  const handleEducationSubmit = async (updatedEducation) => {
+    const educationId = selectedEducation.id;
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      const response = await apiService.modifyInstance(
+        `${MODIFY_EDUCATION_DATA}${educationId}/`,
+        updatedEducation
+      );
+
+      setEducationData((prev) =>
+        prev.map((edu) => (edu.id === educationId ? response.data : edu))
+      );
+
+      toast.success("Education data updated successfully!");
+      setIsEducationModalOpen(false);
+    } catch (error) {
+      console.error("Error updating education:", error);
+      toast.error("Failed to update education data.");
+    }
+  };
+
   // Reusable Profile Section Component
   const ProfileSection = ({ title, children }) => (
     <div className="bg-white shadow-md rounded-lg p-6 mb-6 dark:bg-gray-800">
@@ -108,12 +161,22 @@ const Profile = () => {
   return (
     <div className="max-w-4xl mx-auto p-4 font-sans">
       <h1 className="text-2xl font-bold dark:text-white mb-6">Profile</h1>
+      {/* Edit Profile Button */}
+      <button
+        onClick={handleEditClick}
+        className="text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ml-auto"
+      >
+        Edit Profile
+      </button>
 
       {/* Profile Sections */}
       <ProfileSection title="Basic Information">
         <ProfileField label="Employee ID" value={profileData.Emp_id} />
         {/* <ProfileField label="Nick Name" value={profileData.NickName} /> */}
-        <ProfileField label="Name" value={profileData.first_name} />
+        <ProfileField
+          label="Name"
+          value={`${profileData.first_name} ${profileData.last_name}`}
+        />
       </ProfileSection>
 
       <ProfileSection title="Work Information">
@@ -122,24 +185,33 @@ const Profile = () => {
       </ProfileSection>
 
       <ProfileSection title="Dependent Details">
-        <ProfileField label="Father Name" value={profileData.FatherName} />
-        <ProfileField label="Mother Name" value={profileData.MotherName} />
+        <ProfileField label="Father's Name" value={profileData.FatherName} />
+        <ProfileField label="Mother's Name" value={profileData.MotherName} />
+        <ProfileField
+          label="Emergency Contact"
+          value={profileData.emergency_number}
+        />
       </ProfileSection>
-
       <ProfileSection title="Contact Details">
         <ProfileField
           label="Personal Mobile Number"
           value={profileData.PersonalMobileNumber}
         />
       </ProfileSection>
+      <ProfileSection title="Government ID Proofs">
+        <ProfileField label="Adhaar Number" value={profileData.adhaar_number} />
+        <ProfileField label="Pan Number" value={profileData.pan_number} />
+        <ProfileField label="Adhaar File" value={profileData.adhaar_file} />
+        <ProfileField label="PAN File" value={profileData.pan_file} />
+      </ProfileSection>
 
-      {/* Edit Profile Button */}
       <button
-        onClick={handleEditClick}
-        className="text-gray-900 bg-gradient-to-r from-lime-200 via-lime-400 to-lime-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-lime-300 dark:focus:ring-lime-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+        onClick={handleEditEducationClick}
+        className="text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ml-auto"
       >
-        Edit Profile
+        Edit Education
       </button>
+      <ProfileSection title="Education Details"></ProfileSection>
 
       {/* Edit Profile Modal */}
       {isModalOpen && (
@@ -147,6 +219,14 @@ const Profile = () => {
           profileData={profileData}
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleSubmit}
+        />
+      )}
+
+      {isEducationModalOpen && selectedEducation && (
+        <EditEducation
+          educationData={selectedEducation}
+          onClose={() => setIsEducationModalOpen(false)}
+          onSubmit={handleEducationSubmit}
         />
       )}
     </div>

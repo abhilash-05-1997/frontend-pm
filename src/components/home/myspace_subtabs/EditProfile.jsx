@@ -16,9 +16,10 @@ const EditProfile = ({ profileData, onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
         <h2 className="text-lg font-semibold text-gray-700 mb-4">Edit Profile</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* First Name */}
           <div className="flex flex-col">
             <label className="text-sm text-gray-500 mb-1">First Name</label>
             <input
@@ -30,6 +31,7 @@ const EditProfile = ({ profileData, onClose, onSubmit }) => {
             />
           </div>
 
+          {/* Last Name */}
           <div className="flex flex-col">
             <label className="text-sm text-gray-500 mb-1">Last Name</label>
             <input
@@ -41,6 +43,7 @@ const EditProfile = ({ profileData, onClose, onSubmit }) => {
             />
           </div>
 
+          {/* Father's Name */}
           <div className="flex flex-col">
             <label className="text-sm text-gray-500 mb-1">Father's Name</label>
             <input
@@ -52,6 +55,7 @@ const EditProfile = ({ profileData, onClose, onSubmit }) => {
             />
           </div>
 
+          {/* Mother's Name */}
           <div className="flex flex-col">
             <label className="text-sm text-gray-500 mb-1">Mother's Name</label>
             <input
@@ -63,6 +67,7 @@ const EditProfile = ({ profileData, onClose, onSubmit }) => {
             />
           </div>
 
+          {/* Mobile Number */}
           <div className="flex flex-col">
             <label className="text-sm text-gray-500 mb-1">Mobile Number</label>
             <input
@@ -74,6 +79,7 @@ const EditProfile = ({ profileData, onClose, onSubmit }) => {
             />
           </div>
 
+          {/* Date of Birth */}
           <div className="flex flex-col">
             <label className="text-sm text-gray-500 mb-1">Date of Birth</label>
             <input
@@ -85,9 +91,77 @@ const EditProfile = ({ profileData, onClose, onSubmit }) => {
             />
           </div>
 
+          {/* Emergency Contact Number */}
+          <div className="flex flex-col">
+            <label className="text-sm text-gray-500 mb-1">Emergency Contact Number</label>
+            <input
+              type="number"
+              name="emergency_number"
+              value={formData.emergency_number || ""}
+              onChange={handleChange}
+              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* Adhaar Number */}
+          <div className="flex flex-col">
+            <label className="text-sm text-gray-500 mb-1">Adhaar Number</label>
+            <input
+              type="text"
+              name="adhaar_number"
+              value={formData.adhaar_number || ""}
+              onChange={handleChange}
+              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* PAN Number */}
+          <div className="flex flex-col">
+            <label className="text-sm text-gray-500 mb-1">PAN Number</label>
+            <input
+              type="text"
+              name="pan_number"
+              value={formData.pan_number || ""}
+              onChange={handleChange}
+              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* Adhaar File */}
+          <div className="flex flex-col">
+            <label className="text-sm text-gray-500 mb-1">Adhaar File</label>
+            <input
+              type="file"
+              name="adhaar_file"
+              onChange={handleChange}
+              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="text-sm text-gray-500 mb-1">PAN File</label>
+            <input
+              type="file"
+              name="pan_file"
+              onChange={handleChange}
+              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+
+          {/* Buttons */}
           <div className="flex justify-end gap-3">
-            <button type="button" onClick={onClose} className="bg-gray-200 px-4 py-2 rounded text-gray-700">Cancel</button>
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save</button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="bg-gray-200 px-4 py-2 rounded text-gray-700"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              Save
+            </button>
           </div>
         </form>
       </div>

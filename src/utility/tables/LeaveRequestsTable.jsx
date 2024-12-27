@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const LeaveRequestsTable = ({ data, showActions = false, onStatusChange }) => {
+const LeaveRequestsTable = ({ data, showActions = false, onStatusChange, onCancelRequest }) => {
   const [filter, setFilter] = useState("All Requests");
   const [recordsPerPage, setRecordsPerPage] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
@@ -110,6 +110,15 @@ const LeaveRequestsTable = ({ data, showActions = false, onStatusChange }) => {
                         return `${minDate.toLocaleDateString()} - ${maxDate.toLocaleDateString()}`;
                       })()
                     : "N/A"}
+                  {/* Cancel Button */}
+                  {request.status_of_leave === "Pending" && (
+                    <button
+                      onClick={() => onCancelRequest(request.id)}
+                      className="text-sm bg-red-500 text-white px-3 py-1 rounded ml-2"
+                    >
+                      Cancel
+                    </button>
+                  )}
                 </td>
                 {showActions && (
                   <td className="px-2 sm:px-4 py-2 text-center">
