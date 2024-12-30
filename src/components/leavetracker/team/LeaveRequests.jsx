@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LeaveRequestsTable from "../../../utility/tables/LeaveRequestsTable";
 import apiService from "../../../api/apiService";
+import { toast } from "react-toastify";
 
 const LeaveRequests = () => {
   const [reportees, setReportees] = useState([]); // Ensure empty array as initial state
@@ -14,7 +15,7 @@ const LeaveRequests = () => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("You are not logged in.");
+        toast.error("You have been logged out.. Please Login again");
         return;
       }
 
@@ -34,12 +35,12 @@ const LeaveRequests = () => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("You are not authorized. Please log in again.");
+        toast.error("You are not authorized. Please log in again.");
         return;
       }
 
       await apiService.createInstance(`api/leave-requests/${leaveId}/approve-reject/`, { action });
-      alert(`Leave request ${action}d successfully!`);
+      toast.success(`Leave request ${action}d successfully!`);
 
       // Update local state
       setReportees((prevReportees) =>
@@ -50,7 +51,8 @@ const LeaveRequests = () => {
       fetchReporteesLeaveRequests();
     } catch (error) {
       console.error(`Error ${action}ing leave request:`, error);
-      alert(`Failed to ${action} the leave request.`);
+      // alert(`Failed to ${action} the leave request.`);
+      toast.error(`Failed to ${action} the leave request.`);
     }
   };
 

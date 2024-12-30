@@ -13,7 +13,8 @@ const Reportees = () => {
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("You are not logged in.");
+        // alert("You are not logged in.");
+
         return;
       }
 
@@ -60,7 +61,7 @@ const Reportees = () => {
       setReporteesData(groupedData);
     } catch (error) {
       console.error("Error fetching reportees:", error);
-      alert("Failed to fetch reportees. Please try again.");
+      // alert("Failed to fetch reportees. Please try again.");
     }
   };
 
@@ -106,7 +107,7 @@ const Reportees = () => {
                         <span className="font-semibold text-gray-800 dark:text-dark-text">{leave.total_taken}</span>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-sm text-gray-600 dark:text-dark-text">Remaining Balance</span>
+                        <span className="text-sm text-gray-600 dark:text-dark-text">Available</span>
                         <span className="font-semibold text-gray-800 dark:text-dark-text">{leave.remaining_balance}</span>
                       </div>
                     </li>

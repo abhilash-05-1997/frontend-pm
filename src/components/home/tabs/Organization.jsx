@@ -60,7 +60,7 @@ const Organization = () => {
   };
 
   return (
-    <div className="mt-6 px-4 md:px-8 bg-gray-50 rounded-lg shadow-md max-w-[1600px] dark:bg-dark-bg dark:text-dark-text">
+    <div className="mt-2 px-4 md:px-8 bg-gray-50 rounded-lg shadow-md max-w-[1600px] dark:bg-dark-bg dark:text-dark-text">
       {/* Tabs for all screen sizes */}
       <div className="flex flex-wrap gap-4 border-b pb-4">
         {allTabs.map(({ name, query, icon }) => (

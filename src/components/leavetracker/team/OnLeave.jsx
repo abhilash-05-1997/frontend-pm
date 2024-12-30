@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import apiService from "../../../api/apiService"; // Ensure this is the correct path to your API service
 import { FaRegSadTear } from "react-icons/fa"; // Optional: Add an icon for no members on leave
+import { toast } from 'react-toastify';
 
 const OnLeave = () => {
   const [onLeaveReportees, setOnLeaveReportees] = useState([]);
@@ -18,7 +19,7 @@ const OnLeave = () => {
 
       const token = localStorage.getItem("accessToken");
       if (!token) {
-        alert("You are not logged in.");
+        toast.error("You have been logged out please login again..")
         return;
       }
 
@@ -32,7 +33,7 @@ const OnLeave = () => {
     } catch (error) {
       console.error("Error fetching reportees:", error);
       setHasError(true);
-      alert("Failed to fetch reportees. Please try again.");
+      // alert("Failed to fetch reportees. Please try again.");
     } finally {
       setIsLoading(false);
     }

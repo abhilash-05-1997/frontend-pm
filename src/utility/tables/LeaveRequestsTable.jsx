@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const LeaveRequestsTable = ({ data, showActions = false, onStatusChange, onCancelRequest }) => {
   const [filter, setFilter] = useState("All Requests");
   const [recordsPerPage, setRecordsPerPage] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
+  const location = useLocation();
 
   // Filtered data
   const filteredData =
@@ -111,7 +113,7 @@ const LeaveRequestsTable = ({ data, showActions = false, onStatusChange, onCance
                       })()
                     : "N/A"}
                   {/* Cancel Button */}
-                  {request.status_of_leave === "Pending" && (
+                  {request.status_of_leave === "Pending" && location.pathname.includes("mydata") && (
                     <button
                       onClick={() => onCancelRequest(request.id)}
                       className="text-sm bg-red-500 text-white px-3 py-1 rounded ml-2"

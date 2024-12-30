@@ -208,29 +208,140 @@ const LeavePolicies_tab = () => {
     setIsDeleteModalOpen(true);
   };
 
+  // return (
+  //   <div className="dark:bg-dark-bg dark:text-dark-text ">
+  //     <h2 className="text-xl sm:text-2xl font-bold text-start">
+  //       Leave Policies
+  //     </h2>
+
+  //     <button
+  //       onClick={() => {
+  //         setSelectedPolicy(null);
+  //         setIsModalOpen(true);
+  //       }}
+  //       className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 sm:px-6 sm:py-2 justify-end dark:bg-dark-add-button dark:text-dark-button-text font-bold"
+  //     >
+  //       Add Leave Policy
+  //     </button>
+
+  //     <div className="overflow-x-auto">
+  //       <table className="min-w-full border-collapse table-auto text-sm sm:text-base">
+  //         <thead>
+  //           <tr>
+  //             <th className="px-4 py-2 border-b text-left">
+  //               Leave Policy Name
+  //             </th>
+  //             <th className="px-4 py-2 border-b text-left">
+  //               Carry Forward Type
+  //             </th>
+  //             <th className="px-4 py-2 border-b text-left">Max Days</th>
+  //             <th className="px-4 py-2 border-b text-left">Carry Forward</th>
+  //             <th className="px-4 py-2 border-b text-left">
+  //               Carry Forward Days
+  //             </th>
+  //             <th className="px-4 py-2 border-b text-left">Actions</th>
+  //           </tr>
+  //         </thead>
+  //         <tbody>
+  //           {policies.map((policy, index) => (
+  //             <tr key={index}>
+  //               <td className="px-4 py-2 border-b">
+  //                 {getLeaveTypeName(policy.leave_type)}
+  //               </td>
+  //               <td className="px-4 py-2 border-b">
+  //                 {policy.carry_forward_type}
+  //               </td>
+  //               <td className="px-4 py-2 border-b">{policy.max_days}</td>
+
+  //               <td className="px-4 py-2 border-b">
+  //                 {policy.carry_forward ? "Yes" : "No"}
+  //               </td>
+  //               <td className="px-4 py-2 border-b">
+  //                 {policy.carry_forward_days}
+  //               </td>
+  //               <td className="px-4 py-2 border-b">
+  //                 <button
+  //                   onClick={() => openEditModal(policy.id)}
+  //                   className="px-2 py-1 bg-yellow-600 text-white rounded-md hover:bg-blue-600"
+  //                 >
+  //                   <FaEdit/>
+  //                 </button>
+  //                 <button
+  //                   onClick={() => openDeleteConfirmationModal(policy.leave_type)}
+  //                   className="px-2 py-1 mx-2 bg-red-700 text-white rounded-md hover:bg-blue-600"
+  //                 >
+  //                   <FaTrash/>
+  //                 </button>
+  //               </td>
+  //             </tr>
+  //           ))}
+  //         </tbody>
+  //       </table>
+  //     </div>
+
+  //     {isDeleteModalOpen && (
+  //       <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 sm:p-6">
+  //         <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md max-w-md w-full">
+  //           <h3 className="text-lg sm:text-xl font-semibold">
+  //             Are you sure you want to delete this policy?
+  //           </h3>
+  //           <div className="mt-4 flex justify-end space-x-2 sm:space-x-4">
+  //             <button
+  //               onClick={() => setIsDeleteModalOpen(false)}
+  //               className="px-3 py-1 sm:px-4 sm:py-2 bg-gray-300 rounded-md"
+  //             >
+  //               Cancel
+  //             </button>
+  //             <button
+  //               onClick={handleDelete}
+  //               className="px-3 py-1 sm:px-4 sm:py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+  //             >
+  //               Delete
+  //             </button>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     )}
+
+  //     {isModalOpen && (
+  //       <AddLeavePolicyForm
+  //         leaveTypes={leaveTypes}
+  //         initialData={selectedPolicy}
+  //         onClose={() => {
+  //           setIsModalOpen(false);
+  //           setSelectedPolicy(null);
+  //         }}
+  //         onSave={selectedPolicy ? handleEditPolicy : handleAddOrEditPolicy}
+  //       />
+  //     )}
+  //   </div>
+  // );
+
   return (
-    <div className="p-4 sm:p-6 dark:bg-dark-bg dark:text-dark-text">
-      <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-start">
-        Leave Policies
-      </h2>
-
-      <button
-        onClick={() => {
-          setSelectedPolicy(null);
-          setIsModalOpen(true);
-        }}
-        className="mb-4 px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 sm:px-6 sm:py-2 justify-end dark:bg-dark-add-button dark:text-dark-button-text font-bold"
-      >
-        Add Leave Policy
-      </button>
-
+    <div className="dark:bg-dark-bg dark:text-dark-text">
+      {/* Header Section */}
+      <div className="flex items-center justify-between mb-4">
+        <button
+          onClick={() => {
+            setSelectedPolicy(null);
+            setIsModalOpen(true);
+          }}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 sm:px-6 sm:py-2 dark:bg-dark-add-button dark:text-dark-button-text font-bold"
+        >
+          Add Leave Policy
+        </button>
+  
+        <h3 className="text-xl sm:text-2xl font-semibold text-center flex-grow">
+          Leave Policies
+        </h3>
+      </div>
+  
+      {/* Table Section */}
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse table-auto text-sm sm:text-base">
           <thead>
             <tr>
-              <th className="px-4 py-2 border-b text-left">
-                Leave Policy Name
-              </th>
+              <th className="px-4 py-2 border-b text-left">Leave Policy Name</th>
               <th className="px-4 py-2 border-b text-left">
                 Carry Forward Type
               </th>
@@ -252,7 +363,6 @@ const LeavePolicies_tab = () => {
                   {policy.carry_forward_type}
                 </td>
                 <td className="px-4 py-2 border-b">{policy.max_days}</td>
-
                 <td className="px-4 py-2 border-b">
                   {policy.carry_forward ? "Yes" : "No"}
                 </td>
@@ -264,13 +374,15 @@ const LeavePolicies_tab = () => {
                     onClick={() => openEditModal(policy.id)}
                     className="px-2 py-1 bg-yellow-600 text-white rounded-md hover:bg-blue-600"
                   >
-                    <FaEdit/>
+                    <FaEdit />
                   </button>
                   <button
-                    onClick={() => openDeleteConfirmationModal(policy.leave_type)}
+                    onClick={() =>
+                      openDeleteConfirmationModal(policy.leave_type)
+                    }
                     className="px-2 py-1 mx-2 bg-red-700 text-white rounded-md hover:bg-blue-600"
                   >
-                    <FaTrash/>
+                    <FaTrash />
                   </button>
                 </td>
               </tr>
@@ -278,7 +390,8 @@ const LeavePolicies_tab = () => {
           </tbody>
         </table>
       </div>
-
+  
+      {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 sm:p-6">
           <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md max-w-md w-full">
@@ -302,7 +415,8 @@ const LeavePolicies_tab = () => {
           </div>
         </div>
       )}
-
+  
+      {/* Add/Edit Leave Policy Modal */}
       {isModalOpen && (
         <AddLeavePolicyForm
           leaveTypes={leaveTypes}
@@ -315,7 +429,7 @@ const LeavePolicies_tab = () => {
         />
       )}
     </div>
-  );
+  );  
 };
 
 export default LeavePolicies_tab;
