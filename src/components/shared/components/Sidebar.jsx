@@ -10,7 +10,7 @@ import {
 } from "react-icons/fa";
 import clsx from "clsx";
 
-const PROFILE_DROPDOWN = ["Dashboard", "Sign out"];
+const PROFILE_DROPDOWN = [];
 const SIDEBAR_LINKS = ["Home", "LeaveTracker"];
 
 const ProfileDropdown = ({ isDropdownOpen, toggleDropdown, dropdownRef }) => (
@@ -34,9 +34,9 @@ const ProfileDropdown = ({ isDropdownOpen, toggleDropdown, dropdownRef }) => (
         className="z-50 absolute right-0 mt-2 top-full w-48 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600 max-w-xs"
       >
         <div className="px-4 py-3">
-          <p className="text-sm text-gray-900 dark:text-white">Abhilash</p>
+          <p className="text-sm text-gray-900 dark:text-white"></p>
           <p className="text-sm font-medium text-gray-900 truncate dark:text-gray-300">
-            ab@gmail.com
+            
           </p>
         </div>
         <ul className="py-1">
