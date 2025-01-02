@@ -21,11 +21,12 @@ const Profile = () => {
   const [selectedEducation, setSelectedEducation] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
+  const [educationList, setEducationList] = useState([]);
 
   const GET_PROFILE_DATA = "api/profile/";
   const MODIFY_PROFILE_DATA = "api/profile/";
-  const MODIFY_EDUCATION_DATA = "api/education/";
-  const GET_EDUCATION_DATA = "api/education/";
+  const MODIFY_EDUCATION_DATA = "api/educations/";
+  const GET_EDUCATION_DATA = "api/educations/";
 
   // Fetch profile data on component mount
   useEffect(() => {
@@ -51,7 +52,10 @@ const Profile = () => {
         console.error("Error fetching profile data:", error);
       }
     };
+    fetchProfileData();
+  }, []);
 
+  useEffect(()=> {
     const fetchEducationData = async () => {
       try {
         const token = localStorage.getItem("accessToken");
@@ -66,10 +70,9 @@ const Profile = () => {
         console.error("Error fetching education data:", error);
       }
     };
-
-    fetchProfileData();
     fetchEducationData();
-  }, []);
+  },[])
+
 
   // Handle opening the Edit Modal
   const handleEditClick = () => {
@@ -82,7 +85,7 @@ const Profile = () => {
   };
 
   // Handle profile update submission
-  const handleSubmit = async (updatedData) => {
+  const handleSubmit = async (updatedData, e) => {
     const empId = profileData.id;
 
     try {
@@ -99,6 +102,8 @@ const Profile = () => {
           : "",
       };
 
+      console.log(">>>", updatedFormData);
+
       const response = await apiService.modifyInstance(
         `${MODIFY_PROFILE_DATA}${empId}/`,
         updatedFormData
@@ -114,8 +119,11 @@ const Profile = () => {
   };
 
   const handleEducationSubmit = async (updatedEducation) => {
-    const educationId = selectedEducation.id;
+    console.log("updatedEducation", updatedEducation);
 
+    const educationId = selectedEducation.id;
+    console.log("EducationId", educationId);
+    
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
@@ -123,22 +131,78 @@ const Profile = () => {
         return;
       }
 
-      const response = await apiService.modifyInstance(
-        `${MODIFY_EDUCATION_DATA}${educationId}/`,
-        updatedEducation
-      );
+      const education = {
+        education_type: updatedEducation.education_type,
+        college_name: updatedEducation.college_name,
+        college_location: updatedEducation.college_location,
+        start_year: updatedEducation.start_year,
+        end_year: updatedEducation.end_year,
+        employee: localStorage.getItem("emp_id"),
+      };
 
-      setEducationData((prev) =>
-        prev.map((edu) => (edu.id === educationId ? response.data : edu))
-      );
+      console.log("education", education);
+      
+      if(educationId){
+        const response = await apiService.modifyInstance(`api/educations/${educationId}/`, education);
+        setEducationData((prev) =>
+          prev.map((edu) => (edu.id === educationId ? response.data : edu))
+        );
+      } else{
+        const response = await apiService.createInstance(
+          `${MODIFY_EDUCATION_DATA}`,
+          education
+        );
+        setEducationData((prev) =>
+          prev.map((edu) => (edu.id === educationId ? response.data : edu))
+        );
+      }
+
+
+      
 
       toast.success("Education data updated successfully!");
+      fetchEducations();
       setIsEducationModalOpen(false);
     } catch (error) {
       console.error("Error updating education:", error);
       toast.error("Failed to update education data.");
     }
   };
+
+  const fetchEducations = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+      const response = await apiService.fetchInstance("api/educations/");
+      console.log("response", response.data);
+    } catch (error) {
+      console.error("error fetching education details", error);
+    }
+  };
+  useEffect(() => {
+    fetchEducations();
+  }, []);
+
+  const handleDeleteEducation = async (educationId) => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      await apiService.deleteInstance(`${MODIFY_EDUCATION_DATA}${educationId}/`);
+      setEducationData((prev) => prev.filter((edu) => edu.id !== educationId));
+      toast.success("Education record deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting education:", error);
+      toast.error("Failed to delete education record.");
+    }
+  };
+
 
   // Reusable Profile Section Component
   const ProfileSection = ({ title, children }) => (
@@ -209,9 +273,58 @@ const Profile = () => {
         onClick={handleEditEducationClick}
         className="text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ml-auto"
       >
-        Edit Education
+        Add Education
       </button>
-      <ProfileSection title="Education Details"></ProfileSection>
+      {/* <ProfileSection title="Education Details"></ProfileSection> */}
+      <ProfileSection title="Education Details">
+        {educationData.length > 0 ? (
+          educationData.map((education) => (
+            <div
+              key={education.id}
+              className="p-4 border rounded-lg mb-4 dark:bg-gray-700 dark:border-gray-600"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <ProfileField
+                  label="Education Type"
+                  value={education.education_type}
+                />
+                <ProfileField
+                  label="College Name"
+                  value={education.college_name}
+                />
+                <ProfileField
+                  label="College Location"
+                  value={education.college_location}
+                />
+                <ProfileField
+                  label="Start Year"
+                  value={format(new Date(education.start_year), "yyyy-MM-dd")}
+                />
+                <ProfileField
+                  label="End Year"
+                  value={format(new Date(education.end_year), "yyyy-MM-dd")}
+                />
+              </div>
+              <button
+                onClick={() => handleEditEducationClick(education)}
+                className="mt-4 text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              >
+                Edit
+              </button>
+              <button
+                  onClick={() => handleDeleteEducation(education.id)}
+                  className="text-white bg-red-500 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5"
+                >
+                  Delete
+                </button>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500 dark:text-gray-300">
+            No education details found.
+          </p>
+        )}
+      </ProfileSection>
 
       {/* Edit Profile Modal */}
       {isModalOpen && (

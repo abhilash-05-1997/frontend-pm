@@ -114,8 +114,6 @@ const NewHire_tab = () => {
   };
 
   useEffect(() => {
-    
-
     fetchNewHires();
   }, [filter]);
 

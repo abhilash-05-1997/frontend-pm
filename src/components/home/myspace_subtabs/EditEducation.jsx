@@ -30,9 +30,9 @@ const EditEducation = ({ educationData, onClose, onSubmit }) => {
             >
               <option value="10th class">10th Class</option>
               <option value="12th class">12th Class</option>
-              <option value="Bachelor's">Bachelor's</option>
-              <option value="Master's">Master's</option>
-              <option value="PhD">PhD</option>
+              <option value="b.tech">Bachelor's</option>
+              <option value="m.tech">Master's</option>
+              {/* <option value="PhD">PhD</option> */}
             </select>
           </div>
 
