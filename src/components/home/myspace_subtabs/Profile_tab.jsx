@@ -102,7 +102,7 @@ const Profile = () => {
           : "",
       };
 
-      console.log(">>>", updatedFormData);
+      // console.log(">>>", updatedFormData);
 
       const response = await apiService.modifyInstance(
         `${MODIFY_PROFILE_DATA}${empId}/`,
@@ -119,10 +119,10 @@ const Profile = () => {
   };
 
   const handleEducationSubmit = async (updatedEducation) => {
-    console.log("updatedEducation", updatedEducation);
+    // console.log("updatedEducation", updatedEducation);
 
     const educationId = selectedEducation.id;
-    console.log("EducationId", educationId);
+    // console.log("EducationId", educationId);
     
     try {
       const token = localStorage.getItem("accessToken");
@@ -140,7 +140,7 @@ const Profile = () => {
         employee: localStorage.getItem("emp_id"),
       };
 
-      console.log("education", education);
+      // console.log("education", education);
       
       if(educationId){
         const response = await apiService.modifyInstance(`api/educations/${educationId}/`, education);
@@ -177,7 +177,7 @@ const Profile = () => {
         return;
       }
       const response = await apiService.fetchInstance("api/educations/");
-      console.log("response", response.data);
+      // console.log("response", response.data);
     } catch (error) {
       console.error("error fetching education details", error);
     }
