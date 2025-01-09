@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import EditProfile from "./EditProfile";
 import EditEducation from "./EditEducation";
+import EditFiles from "./EditFiles";
 import apiService from "../../../api/apiService";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
@@ -22,11 +23,15 @@ const Profile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
   const [educationList, setEducationList] = useState([]);
+  const [isFilesModalOpen, setIsFilesModalOpen] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState(null);
+  const [fileLinks, setFileLinks] = useState({ adhaar: "", pan: "" });
 
   const GET_PROFILE_DATA = "api/profile/";
   const MODIFY_PROFILE_DATA = "api/profile/";
   const MODIFY_EDUCATION_DATA = "api/educations/";
   const GET_EDUCATION_DATA = "api/educations/";
+  const GET_FILES_URL = "api/employee-attachments/";
 
   // Fetch profile data on component mount
   useEffect(() => {
@@ -55,7 +60,7 @@ const Profile = () => {
     fetchProfileData();
   }, []);
 
-  useEffect(()=> {
+  useEffect(() => {
     const fetchEducationData = async () => {
       try {
         const token = localStorage.getItem("accessToken");
@@ -71,8 +76,42 @@ const Profile = () => {
       }
     };
     fetchEducationData();
-  },[])
+  }, []);
 
+  useEffect(() => {
+    const fetchFileLinks = async () => {
+      try {
+        const empId = localStorage.getItem("emp_id");
+        if (!empId) {
+          console.error("No emp_id found in localStorage");
+          return;
+        }
+  
+        const response = await apiService.fetchInstance(
+          `${GET_FILES_URL}?employee=${empId}`
+        );
+        const files = response.data;
+        console.log("Hello:", files);
+        
+  
+        // Find the Aadhar and PAN files
+        const adhaarFile = files.find((file) => file.document_type === "aadhar");
+        const panFile = files.find((file) => file.document_type === "pan");
+        console.log("Aadhar", adhaarFile);
+        
+  
+        // Set the file URLs into state
+        setFileLinks({
+          adhaar: adhaarFile ? adhaarFile.file_url : "",
+          pan: panFile ? panFile.file_url : "",
+        });
+      } catch (error) {
+        console.error("Error fetching file links:", error);
+      }
+    };
+  
+    fetchFileLinks();
+  }, []);
 
   // Handle opening the Edit Modal
   const handleEditClick = () => {
@@ -82,6 +121,11 @@ const Profile = () => {
   const handleEditEducationClick = (education) => {
     setSelectedEducation(education);
     setIsEducationModalOpen(true);
+  };
+
+  const handleEditFilesClick = (files) => {
+    setSelectedFiles(files);
+    setIsFilesModalOpen(true);
   };
 
   // Handle profile update submission
@@ -118,12 +162,16 @@ const Profile = () => {
     }
   };
 
+  const handleFilesSubmit = async () => {
+    console.log("Hello there");
+  };
+
   const handleEducationSubmit = async (updatedEducation) => {
     // console.log("updatedEducation", updatedEducation);
 
     const educationId = selectedEducation.id;
-    // console.log("EducationId", educationId);
-    
+    console.log("EducationId", educationId);
+
     try {
       const token = localStorage.getItem("accessToken");
       if (!token) {
@@ -160,9 +208,6 @@ const Profile = () => {
         setEducationData((prev) => [...prev, response.data]);
 
       }
-
-
-      
 
       toast.success("Education data updated successfully!");
       fetchEducations();
@@ -202,7 +247,9 @@ const Profile = () => {
         return;
       }
 
-      await apiService.deleteInstance(`${MODIFY_EDUCATION_DATA}${educationId}/`);
+      await apiService.deleteInstance(
+        `${MODIFY_EDUCATION_DATA}${educationId}/`
+      );
       setEducationData((prev) => prev.filter((edu) => edu.id !== educationId));
       toast.success("Education record deleted successfully!");
     } catch (error) {
@@ -210,7 +257,6 @@ const Profile = () => {
       toast.error("Failed to delete education record.");
     }
   };
-
 
   // Reusable Profile Section Component
   const ProfileSection = ({ title, children }) => (
@@ -227,6 +273,26 @@ const Profile = () => {
     <div>
       <p className="text-sm text-gray-500 dark:text-gray-300">{label}</p>
       <p className="text-gray-800 font-medium dark:text-gray-400">{value}</p>
+    </div>
+  );
+
+  const ProfileFieldFile = ({ label, value, isLink }) => (
+    <div>
+      <p className="text-sm text-gray-500 dark:text-gray-300">{label}</p>
+      {isLink && value ? (
+        <a
+          href={value}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline dark:text-blue-400"
+        >
+          View File
+        </a>
+      ) : (
+        <p className="text-gray-800 font-medium dark:text-gray-400">
+          {value || "Not Available"}
+        </p>
+      )}
     </div>
   );
 
@@ -270,11 +336,26 @@ const Profile = () => {
           value={profileData.PersonalMobileNumber}
         />
       </ProfileSection>
+      <button
+        onClick={handleEditFilesClick}
+        className="text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ml-auto"
+      >
+        Add Files
+      </button>
       <ProfileSection title="Government ID Proofs">
         <ProfileField label="Adhaar Number" value={profileData.adhaar_number} />
         <ProfileField label="Pan Number" value={profileData.pan_number} />
-        <ProfileField label="Adhaar File" value={profileData.adhaar_file} />
-        <ProfileField label="PAN File" value={profileData.pan_file} />
+        <ProfileFieldFile
+          label="Aadhar File"
+          value={fileLinks.adhaar}
+          isLink={true} // Ensures it's a clickable link
+        />
+
+        <ProfileFieldFile
+          label="PAN File"
+          value={fileLinks.pan}
+          isLink={true} // Ensures it's a clickable link
+        />
       </ProfileSection>
 
       <button
@@ -320,11 +401,11 @@ const Profile = () => {
                 Edit
               </button>
               <button
-                  onClick={() => handleDeleteEducation(education.id)}
-                  className="text-white bg-red-500 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5"
-                >
-                  Delete
-                </button>
+                onClick={() => handleDeleteEducation(education.id)}
+                className="text-white bg-red-500 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5"
+              >
+                Delete
+              </button>
             </div>
           ))
         ) : (
@@ -348,6 +429,14 @@ const Profile = () => {
           educationData={selectedEducation}
           onClose={() => setIsEducationModalOpen(false)}
           onSubmit={handleEducationSubmit}
+        />
+      )}
+
+      {isFilesModalOpen && selectedFiles && (
+        <EditFiles
+          filesData={selectedFiles}
+          onClose={() => setIsFilesModalOpen(false)}
+          onSubmit={handleFilesSubmit}
         />
       )}
     </div>

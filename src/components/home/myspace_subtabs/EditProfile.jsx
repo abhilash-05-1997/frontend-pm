@@ -127,26 +127,6 @@ const EditProfile = ({ profileData, onClose, onSubmit }) => {
             />
           </div>
 
-          {/* Adhaar File */}
-          <div className="flex flex-col">
-            <label className="text-sm text-gray-500 mb-1">Adhaar File</label>
-            <input
-              type="file"
-              name="adhaar_file"
-              onChange={handleChange}
-              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-sm text-gray-500 mb-1">PAN File</label>
-            <input
-              type="file"
-              name="pan_file"
-              onChange={handleChange}
-              className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-
           {/* Buttons */}
           <div className="flex justify-end gap-3">
             <button
