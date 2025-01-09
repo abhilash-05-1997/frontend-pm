@@ -147,14 +147,18 @@ const Profile = () => {
         setEducationData((prev) =>
           prev.map((edu) => (edu.id === educationId ? response.data : edu))
         );
+        // setEducationData((prev) => [...prev, response.data]);
+
       } else{
         const response = await apiService.createInstance(
           `${MODIFY_EDUCATION_DATA}`,
           education
         );
-        setEducationData((prev) =>
-          prev.map((edu) => (edu.id === educationId ? response.data : edu))
-        );
+        // setEducationData((prev) =>
+        //   prev.map((edu) => (edu.id === educationId ? response.data : edu))
+        // );
+        setEducationData((prev) => [...prev, response.data]);
+
       }
 
 
@@ -164,8 +168,11 @@ const Profile = () => {
       fetchEducations();
       setIsEducationModalOpen(false);
     } catch (error) {
-      console.error("Error updating education:", error);
-      toast.error("Failed to update education data.");
+      if (error.response && error.response.data && error.response.data.error) {
+        toast.error(error.response.data.error); // Display the backend error
+      } else {
+        toast.error('Something went wrong. Please try again.'); // Generic error
+      }
     }
   };
 
@@ -177,14 +184,15 @@ const Profile = () => {
         return;
       }
       const response = await apiService.fetchInstance("api/educations/");
+      setEducationData(response.data)
       // console.log("response", response.data);
     } catch (error) {
       console.error("error fetching education details", error);
     }
   };
-  useEffect(() => {
-    fetchEducations();
-  }, []);
+  // useEffect(() => {
+  //   fetchEducations();
+  // }, []);
 
   const handleDeleteEducation = async (educationId) => {
     try {

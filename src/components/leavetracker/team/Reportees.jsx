@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import apiService from "../../../api/apiService";
-import { FaRegCalendarCheck, FaRegUser } from 'react-icons/fa';
+import { FaRegCalendarCheck, FaRegUser } from "react-icons/fa";
 
 const Reportees = () => {
   const [reporteesData, setReporteesData] = useState({});
@@ -94,7 +94,7 @@ const Reportees = () => {
               </h3>
             </div>
             <div className="space-y-4">
-              <ul className="list-none space-y-2 text-gray-700">
+              {/* <ul className="list-none space-y-2 text-gray-700">
                 {(reporteesData[reportee].leave_details || []).map(
                   (leave, leaveIndex) => (
                     <li
@@ -109,6 +109,38 @@ const Reportees = () => {
                       <div className="flex flex-col items-end">
                         <span className="text-sm text-gray-600 dark:text-dark-text">Available</span>
                         <span className="font-semibold text-gray-800 dark:text-dark-text">{leave.remaining_balance}</span>
+                      </div>
+                    </li>
+                  )
+                )}
+              </ul> */}
+              <ul className="list-none space-y-2 text-gray-700">
+                {(reporteesData[reportee].leave_details || []).map(
+                  (leave, leaveIndex) => (
+                    <li
+                      key={leaveIndex}
+                      className="flex justify-between items-center p-3 border rounded-lg bg-white shadow-sm hover:bg-indigo-50 transition-colors dark:bg-dark-info-cards dark:border-0-gray"
+                    >
+                      <span className="font-bold dark:text-dark-text">
+                        {leave.leave_type}:
+                      </span>
+                      <div className="flex space-x-8 items-center">
+                        <div className="text-center">
+                          <span className="text-sm text-gray-600 dark:text-dark-text">
+                            Total Taken
+                          </span>
+                          <div className="font-semibold text-gray-800 dark:text-dark-text">
+                            {leave.total_taken}
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-sm text-gray-600 dark:text-dark-text">
+                            Available
+                          </span>
+                          <div className="font-semibold text-gray-800 dark:text-dark-text">
+                            {leave.remaining_balance}
+                          </div>
+                        </div>
                       </div>
                     </li>
                   )

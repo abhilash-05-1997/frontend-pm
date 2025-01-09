@@ -192,8 +192,8 @@ const LeaveSummary = () => {
 
   const LeaveCard = ({ leave }) => (
     <div
-      onClick={() => handleCardClick(leave)}
-      className="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:scale-105 transform transition duration-300 cursor-pointer dark:bg-dark-info-cards dark:border-none"
+      // onClick={() => handleCardClick(leave)}
+      className="bg-white p-6 rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:scale-105 transform transition duration-300  dark:bg-dark-info-cards dark:border-none"
     >
       <h2 className="text-lg font-semibold text-gray-700 mb-4 text-center dark:text-dark-text">
         {leave.leave_type}
